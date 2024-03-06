@@ -299,3 +299,24 @@ TSWLatexianTemp*
 # option is specified. Footnotes are the stored in a file with suffix Notes.bib.
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
+# Ignore all .DS_Store files
+.DS_Store
+
+# Ignore all contents of the .ssh directory
+.ssh/
+
+# Ignore specific extensions and directories
+**/.vscode/
+**/node_modules/
+**/dist/
+**/typeshed-fallback/
+
+# Ignore all .pyi files inside any dist directory
+dist/**/*.pyi
+
+#Other directories
+
+../
+../../Documents/
+../../Downloads/
+...
