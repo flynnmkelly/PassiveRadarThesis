@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage{graphicx}
-%\usepackage{natbib}
+\usepackage[margin=2cm]{geometry} % Set the margins to 2cm on all sides
+\usepackage{amsmath} % for advanced math typesetting
 
 \begin{document}
 
@@ -18,6 +19,10 @@
         \vspace{2.5cm}
         
         \textbf{\Large{PROJECT PROPOSAL}}
+        
+        \vspace{0.5cm}
+
+        \textbf{\Large{Embedded Passive Radar Detection}}
         
         \vspace{2cm}
         
@@ -42,23 +47,79 @@
 \clearpage
 
 % Beginning of Sections
-\section{Abstract}
-Testing, testing, submitting proposal on the topic of passive radar detection embedded in an IoT device.
-Testing the citation \cite{DTSO2009}
 
-Second citation \cite{SIGNAL2013}
+\section{Introduction}
+This proposal introduces the theory, motivations and planned process for the creation of an embedded passive radar detection system. 
 
-\section{Topic, Goal and Relevance}
-\subsection{Field}
-\subsection{Scope of Current Research}
-\subsection{Gap in Knowledge}
-\subsection{Brief Research Plan}
+\subsection{Topic and Relevance}
+Passive radar detection technology is a class of radar detection whereby the radar receiver does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}.
+\par
+\vspace{0.5cm} 
+\noindent The technology has a number of advantages over traditional radar systems. It is covert, as it does not emit any radiation, and is therefore difficult to detect and directly jam, leading to a concentrated interest from defence cirlces \cite{DTSO2009}. It is also relatively cheap, as it does not require a dedicated transmitter and hence has less energy consumption. Conversely, it has a number of disadvantages, such as a lower signal-to-noise ratio, and a requirement for a relatively large amount of computational power to process the received signals \cite{INTRO2017}.
+\par
+\vspace{0.5cm} 
+\noindent Bistatic passive radar detection has a wide range of applications centered around situational awareness, including air traffic control, border security, and environmental monitoring. Embedding the passive radar technology is a relatively new field buoyed by recent and increasing developments in computational power on Internet of Things (IoT) devices \cite{IOTpassiveRadar}. This project aims to reinforce and build on existing technology by creating a low-cost, modular, small-scale embedded passive radar detection system. Moreover, this project will also explore the possibility of scaling up this bistatic setup to a multistatic system, and the potential advantages and disadvantages of such. 
+
+\par
+\vspace{0.5cm} 
+\noindent More specifically, the project will focus on streamlining the signal processing and computational requirements of both the line of sight signal and the reflected target signal onto a singular embedded setup, without PC hardware. This will be achieved by using a combination of existing embedded IoT hardware, and through using existing DSP (digital signal processing) and radar filtering algorithms. Initially, the illuminator of opportunity selected is the DAB+ (digital audio broadcasting) signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. Noting that a range of other terrestrial illuminator signals can be utilised, often tailored to specifically required use cases \cite{DABsignal}.
+
+\subsection{Goals}
+The primary goals of the project include the following, provided in order of logical progression;
+\begin{itemize}
+    \item Implement and investigate passive radar detection algorithms on high end computer architecture (PC) connected to SDR hardware and antenna for line of sight and target signal processing.
+    \item Scaling down the passive radar detection system and associated algorithms to run on embedded IoT hardware, and investigate the computational and signal processing requirements, including the possible design of custom hardware such as peripheral functionality and printed circuit boards. A central feature of this specific goal is its ideally low cost nature.
+    \item Verify functionality of low cost embedded passive radar detection system in a controlled environment against higher power computing results, and investigate the potential for scaling up to a multistatic system.
+    \item Design and develop suitable housing for embdedded project implementation with ideal features such as modularity, portability and potential scaleability. 
+\end{itemize}
+
 
 \section{Background and Literature Review}
+
 \subsection{Literature Review}
-% ADD MORE SUBSECTIONS HERE BASED ON LIT REVIEW BREAKDOWN
-\subsection{Contextual Gap of Knowledge}
+The below subsections reflect the neccessary research considerations for the project, and will be used to inform the project plan and optimize the implementation.
+
+\subsubsection{Passive Radar Fundamentals}
+The key and unique feature of passive radar is its utilisation of existing illuminators of opportunity, such as television or radio broadcasts, to detect and track objects. The technology has been around since the early 20th century, with modern interest accelerated due to the use passive radar systems on UHF TV signals and VHF FM radio tranmission systems in the 1980's \cite{FundamentalsPassiveRadar}. Equivalent terms used to describe passive radar include passive coherent location (PCL), and passive covert radar (PCR), parasitic radar, piggyback radar. Specifically, \textit{bistatic} radar refers to the distributed design of the transmitter and receiver, as opposed to classic \textit{monostatic} radar. As reflectd by Figure \ref{fig: topology} below, the turning parabolic of monostatic radar is able to receive both range and bearing of the signal echo, whereas passive bistatic radar measures time delay of the echos from the target, allowing doppler shift from the relative speed of the target to be measured.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{monoBi.jpg}
+    \caption{Monostatic (a) and bistatic (b) radar topologies \cite{IOTpassiveRadar}}
+    \label{fig: topology}
+\end{figure}
+\par 
+\vspace{0.5cm} 
+\noindent The geometry of passive bistatic radar can be further explored and equations can be mapped accordingly, with the distance between the transmitter and receiver \textit{R} being determined by known quantities such as the baseline as reflected below in Figure \ref{fig:geometry}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{geomPR.jpg}
+    \caption{Bistatic radar geometry \cite{FundamentalsPassiveRadar}}
+    \label{fig:geometry}
+\end{figure}
+
+\par \vspace{0.5cm} 
+\noindent The bistatic range \( R_R \) is given by:
+\begin{equation}
+R_R = \frac{(R_T + R_R)^2 - L^2}{2(R_T + R_R + L \sin \theta_R)}
+\end{equation}
+
+\noindent The Doppler shift \( f_D \) is given by the rate of change of the bistatic range sum:
+\begin{equation}
+f_D = \frac{1}{\lambda} \frac{d}{dt}(R_T + R_R)
+\end{equation}
+In the case of this project, both the TX (illuminator of opportunity) and the RX (embedded passive detection system) will be static, and the target will be moving. The Doppler shift will be used to determine the speed of the target, and the range will be used to determine the distance of the target from the receiver.
+
+\subsubsection{Illuminators of Opportunity}
+\subsubsection{Radio Hardware}
+\subsubsection{IoT Architecture}
+\subsubsection{Signal Processing and Algorithms} 
+\subsubsection{Range Doppler Mapping}
+
+
 \subsection{Pilot Studies}
+Discuss silentium defence Maverick-M silent radar, IoT example, drone embedded example.
+
 
 
 \section{Project Plan}
