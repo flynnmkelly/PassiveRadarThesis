@@ -2,6 +2,8 @@
 \usepackage{graphicx}
 \usepackage[margin=2cm]{geometry} % Set the margins to 2cm on all sides
 \usepackage{amsmath} % for advanced math typesetting
+\usepackage{multicol}
+\usepackage{enumitem}
 
 \begin{document}
 
@@ -52,7 +54,7 @@
 This proposal introduces the theory, motivations and planned process for the creation of an embedded passive radar detection system. 
 
 \subsection{Topic and Relevance}
-Passive radar detection technology is a class of radar detection whereby the radar receiver does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}.
+Passive radar detection technology is a class of radar detection whereby the radar system and by extension the radar receiver does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}.
 \par
 \vspace{0.5cm} 
 \noindent The technology has a number of advantages over traditional radar systems. It is covert, as it does not emit any radiation, and is therefore difficult to detect and directly jam, leading to a concentrated interest from defence cirlces \cite{DTSO2009}. It is also relatively cheap, as it does not require a dedicated transmitter and hence has less energy consumption. Conversely, it has a number of disadvantages, such as a lower signal-to-noise ratio, and a requirement for a relatively large amount of computational power to process the received signals \cite{INTRO2017}.
@@ -106,19 +108,65 @@ R_R = \frac{(R_T + R_R)^2 - L^2}{2(R_T + R_R + L \sin \theta_R)}
 
 \noindent The Doppler shift \( f_D \) is given by the rate of change of the bistatic range sum:
 \begin{equation}
-f_D = \frac{1}{\lambda} \frac{d}{dt}(R_T + R_R)
+f_D = \frac{1}{\lambda} \frac{d}{dt}(R_T + R_R) \xrightarrow{} f_D = \frac{2v}{\lambda} \cos \delta \cos(\frac{\beta}{2})
 \end{equation}
-In the case of this project, both the TX (illuminator of opportunity) and the RX (embedded passive detection system) will be static, and the target will be moving. The Doppler shift will be used to determine the speed of the target, and the range will be used to determine the distance of the target from the receiver.
+In the case of this project, both the TX (illuminator of opportunity) and the RX (embedded passive detection system) will be static, and the target will be moving, simplifying the mathematical calculations as much as possible, resulting in the cos version of equation 2 above. The Doppler shift will be used to determine the speed of the target as well as its relative directional motion, and the range will be used to determine the distance of the target from the receiver.
+
+\par \vspace{0.5cm} 
+\noindent Another important feature of bistatic passive radar systems is its performance which can be equated through the bistatic radar equation, which is equivalently derived as the monostatic radar equation \cite{FundamentalsPassiveRadar}. 
+\vspace{0.5cm} 
+\begin{equation}
+    \frac{P_r}{P_n} = \frac{P_t G_t}{4\pi R_T^2} \cdot \sigma_B \cdot \frac{1}{4\pi R_R^2} \cdot \frac{G_r \lambda^2}{4\pi} \cdot \frac{1}{k T_0 B F}
+\end{equation}
+Where:
+\begin{multicols}{2}
+    \begin{itemize}
+    \item \( P_r \) is the received target echo power.
+    \item \( P_n \) is the receiver noise power.
+    \item \( P_t \) is the transmit power.
+    \item \( G_t \) is the transmit antenna gain.
+    \item \( R_T \) is the transmitter-to-target range.
+    \item \( \sigma_B \) is the target bistatic radar cross section.
+    \item \( R_R \) is the target-to-receiver range.
+    \item \( G_r \) is the receive antenna gain.
+    \item \( \lambda \) is the signal wavelength.
+    \item \( k \) is Boltzmann’s constant (\( 1.38 \times 10^{-23} \) JK\(^{-1}\)).
+    \item \( T_0 \) is the noise reference temperature.
+    \item \( B \) is the receiver effective bandwidth.
+    \item \( F \) is the receiver effective noise figure.
+    \end{itemize}
+\end{multicols}
+\noindent The denominator of the bistatic radar equation includes the term \( \frac{1}{R_T^2 R_R^2} \).This term implies that with omnidirectional antenna patterns, the contours of constant signal-to-noise ratio (SNR) are described by the equation \( R_T R_R = \text{constant} \), which represents Ovals of Cassini. In the case of directional antennas, these contours are altered. Moreover, the signal-to-noise ratio is minimized when the target is equidistant from the transmitter and receiver (\( R_T = R_R \)), and maximized when the target is closer to either the transmitter or receiver \cite{FundamentalsPassiveRadar}.
+
+\par \vspace{0.5cm} 
+\noindent Ideally this project would process just the target signal, however, that is an unrealistic expectation due to the presence of clutter. Clutter refers to unwanted signal that eminates from objects in the natural environemnt such as buildings, trees and ground \cite{zhang2023intelligent}. This process of target signal clutter suppression and its impact on range doppler mapping will be discussed later in the literature review.  
 
 \subsubsection{Illuminators of Opportunity}
+The illuminator of opportunity is the signal that is used to illuminate the target, and is the primary source of the signal that is received by the passive radar system. The illuminator of opportunity can be any signal that is transmitted through the air, such as television or radio broadcasts, and can be tailored to the specific requirements of the passive radar system. Griffiths and Baker outline the three key paramaters when selecting an illuminator \cite{INTRO2017}:
+\begin{enumerate}[label=\arabic*.]
+    \item The \textbf{Power Density} at the target: It refers to the strength of the signal (in Watts per square meter) that reaches the target area from the illuminator. Higher power density can improve detection performance due to a stronger return signal.
+    \item The \textbf{Nature of the Waveform}: This includes the waveform's properties, such as bandwidth and modulation, which can affect the radar's resolution and ability to distinguish between targets and clutter.
+    \item The \textbf{Coverage}: The spatial area over which the illuminator's signal is spread. Adequate coverage is essential to ensure the target is within the illuminator's effective range.
+\end{enumerate}
+Illuminator signals are not limited to terrestrial signals, and can also include signals from satellites, and can be tailored to the specific requirements of the passive radar system. The illuminator of opportunity selected for this project is the DAB+  signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. The DAB+ signal was selected due to its high power density, and its relatively high bandwidth, which can be used to improve the radar's resolution and ability to distinguish between targets and clutter. Moreover, the geographical proximity of a DAB+ transmitter at Mt Cootha to the University of Queensland, St Lucia campus, makes it an ideal choice for the project.
+\par \vspace{0.5cm} 
+\noindent DIRECT SIGNAL INTERFERENCE???
+
+\par \vspace{0.5cm} 
+\noindent Typical characteristics of Australian DAB+ signals include frequency of just over 200MHz, bandwidth of approximately 1.5MHz, and a minimal output power of 10kW effective radiated power (ERP), consequently covering a large area \cite{DABfeatures}. These digital signals employ a modulation scheme called COFDM (coded orthogonal frequency division multiplexing), which is a form of multi-carrier modulation that is robust against multipath interference \cite{INTRO2017}. COFDM works by dividing the signal into multiple, simultaneous streams which are orthogonal to each other, modulated at a different frequency, maximising robust signal propogation. This is particularly useful in the context of passive radar, as it allows for the target and reference signal to be received by the passive radar system even if it has been reflected off multiple surfaces, such as buildings or trees.
+
+\par \vspace{0.5cm} 
+\noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}.
+\subsubsection{Range Doppler Mapping}
+Range doppler mapping is a technique used to determine the distance and relative velocity of targets by analyzing the frequency shift (Doppler shift) and time delay of the received signals after they bounce off the targets
 \subsubsection{Radio Hardware}
 \subsubsection{IoT Architecture}
 \subsubsection{Signal Processing and Algorithms} 
-\subsubsection{Range Doppler Mapping}
+
 
 
 \subsection{Pilot Studies}
-Discuss silentium defence Maverick-M silent radar, IoT example, drone embedded example.
+Discuss silentium defence Maverick-M silent radar, IoT example, drone embedded example. SILENT SENTRY, DTSO
 
 
 
