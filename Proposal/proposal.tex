@@ -60,7 +60,7 @@
 % Beginning of Sections
 
 \section{Introduction}
-This proposal introduces the theory, motivations and planned process for the creation of a low cost embedded bistatic passive radar detection system utilising DAB+ as the illuminator of opportunity. 
+This proposal introduces the theory, motivations and planned process for the creation of a low cost embedded bistatic passive radar detection system utilising a to be confirmed digital broadcast signal as the illuminator of opportunity. 
 
 \subsection{Topic and Relevance}
 Passive radar detection technology is a class of radar detection whereby the radar system does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}.
@@ -73,7 +73,7 @@ Passive radar detection technology is a class of radar detection whereby the rad
 
 \par
 \vspace{0.5cm} 
-\noindent More specifically, the project will focus on streamlining the signal processing and computational requirements of both the line of sight signal and the reflected target signal onto a singular embedded setup, without PC hardware. This will be achieved by using a combination of existing embedded IoT hardware, and through using existing DSP (digital signal processing) and radar filtering algorithms. Initially, the illuminator of opportunity selected is the DAB+ (digital audio broadcasting) signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. Noting that a range of other terrestrial illuminator signals can be utilised, often depending on the required use case, such as the tracking target and environment \cite{DABsignal}.
+\noindent More specifically, the project will focus on streamlining the signal processing and computational requirements of both the line of sight signal and the reflected target signal onto a singular embedded setup, without PC hardware. This will be achieved by using a combination of existing embedded IoT hardware, and through using existing DSP (digital signal processing) and radar filtering algorithms. Initially, the illuminator of opportunitys explored are digital broadcast signals, and the target signal will be aerial vehicles. Noting that a range of other terrestrial illuminator signals can be utilised, often depending on the required use case, such as the tracking target and environment \cite{DABsignal}.
 
 \subsection{Goals}
 The primary goals of the project include the following, provided in order of logical progression;
@@ -157,7 +157,7 @@ The illuminator of opportunity is the signal that is used to illuminate the targ
     \item The \textbf{Nature of the Waveform}: This includes the waveform's properties, such as bandwidth and modulation, which can affect the radar's resolution and ability to distinguish between targets and clutter.
     \item The \textbf{Coverage}: The spatial area over which the illuminator's signal is spread. Adequate coverage is essential to ensure the target is within the illuminator's effective range.
 \end{enumerate}
-Illuminator signals are not limited to terrestrial signals, and can also include signals from satellites, and can be tailored to the specific requirements of the passive radar system. The illuminator of opportunity selected for this project is the DAB+  signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. The DAB+ signal was selected due to its high power density, and its relatively high bandwidth, which can be used to improve the radar's resolution and ability to distinguish between targets and clutter. Moreover, the geographical proximity of a DAB+ transmitter at Mt Cootha to the University of Queensland, St Lucia campus, makes it an ideal choice for the project.
+Illuminator signals are not limited to terrestrial signals, and can also include signals from satellites, and can be tailored to the specific requirements of the passive radar system. The illuminator of opportunity primarily explored for this project is the DAB+ signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. The DAB+ signal is a good option due to its high power density, and its relatively high bandwidth, which can be used to improve the radar's resolution and ability to distinguish between targets and clutter. Moreover, the geographical proximity of a DAB+ transmitter at Mt Cootha to the University of Queensland, St Lucia campus, making it a potentially ideal choice for the project. Another prospective digital illuminator signal is DVB-T (digital video broadcast - terrestrial), which is similar in its digital modulation to DAB, but provides increased bandwidth and signal power \cite{DVBsignal}. Furthemore, as shown by Yin et. al \cite{DVBnoise}, due to the relative complexity of  DVB visual signals, more signal processing steps can be required, which could exceed prospective hardware limitations of this project.
 
 \par \vspace{0.5cm} 
 \noindent A potential problem associated with the use of DAB as an illuminator is direct signal interference (DSI), with the effects being amplified in urban environments. Coleman et. al \cite{DABfeatures} explain that the sheer signal size of direct illuminator size relative to surveillance signal size results in a high level of DSI. They outline that the cross polarisation of the transmitted DAB signal can be utilised along with illuminator cancellation filtering to attain higher level suppression. The leakage of the illuminator signal into the target signal can be due to a range of factors including buildings, trees and other reflective items as highlighted by Palmer et. al \cite{DTSO2009}, specific filter arrangements will be explored later on.
@@ -186,12 +186,14 @@ Where:
 \end{itemize}
 \end{multicols}
 \noindent The ambiguity function can be plotted, thereby visualising resolution, sidelobe patterns and any discrepancies in range and doppler. This is especially important for passive bistatic radar, whereby waveforms are not explicitly designed for radar and the geometry also has an impact \cite{FundamentalsPassiveRadar}. Hughes visualises the geometry considerations and potential flaws of passive bistatic below in Figure \ref{fig:ambiguity}.
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{ambiguity.jpg}
+    \includegraphics[width=0.7\textwidth]{ambiguity.jpg}
     \caption{Geometry and ambiguity function \cite{FundamentalsPassiveRadar}}
     \label{fig:ambiguity}
 \end{figure}
+
 \par \vspace{0.5cm} 
 \noindent Understanding the link between geometric configuration and theoretical signal properties, the practical manifestation of the ambiguity function is range doppler mapping. As shown in Figure \ref{fig:rangeDoppler}, the map is a heat map and is derived with filters for noise minimsation, allowing for the visualisation of the target signal with minimal clutter. 
 \begin{figure}[htbp]
@@ -202,58 +204,22 @@ Where:
 \end{figure}
 \par  
 \noindent In the case of this project, the time delay will be utilised to calculate the bistatic range (x axis) and the Doppler shift will be used to calculate the relative velocity of the target (y axis). In summary, ambiguity function and subequent range doppler mapping will be vital for mapping the DAB+ signal characteristics for given geometry and motion of the surveilled target.
+
 \subsubsection{Radio Hardware}
-Given the low cost aims of this project, hardware cost will majorly impact the overall cost. Luckily, the proliferation of Software Defined Radio (SDR) has enabled low cost hardware modules enabling easy access to radio frequency (RF) signals \cite{SDRtheory}. The most popular SDR module is the RTL-SDR, which is a USB dongle that can be used to receive and decode a wide range of RF signals. The RTL-SDR is based on the Realtek RTL2832U chipset, and has a frequency range of 24MHz to 1.7GHz, and a bandwidth of 3.2MHz. The RTL-SDR is also relatively cheap, with a price of around \$40 AUD. The RTL-SDR is also compatible with a wide range of software, including MATLAB, and GNU radio \cite{SDRdongle}. Given the digital nature of the DAB+ signal, the direct reference signal and the target surveillance signal can in theory be sampled by a singular RTL2832U module as shown by Barrot et.al \cite{DABsingleRadar}. Given the wide bandwidth of DAB signals, it is optimal to connect the RTL module to a LPDA antenna \cite{AntennaHW}, which at the low end retail for around \$50 AUD. Regardless of sampling hardware architecture, based on previous studies and the nature of the DAB+ signal and modulation framework, a sampling rate of 2.048\,MS/s is prudent \cite{IOTpassiveRadar}. This hardware can be scaled up, accordingly providing a reference antenna and a surveillance antenna, as seen in Yardleys 2007 DAB receiver project \cite{antennaArchitecture}. On the contrary, as a potential extension, the use of a single antenna can be attempted with additional reconstruction processing required (providing lower hardware cost), rhis has been achieved by Barott and Engle \cite{DABsingleRadar}.
+Given the low cost aims of this project, hardware cost will majorly impact the overall cost. Luckily, the proliferation of Software Defined Radio (SDR) has enabled low cost hardware modules enabling easy access to radio frequency (RF) signals \cite{SDRtheory}. The most popular SDR module is the RTL-SDR, which is a USB dongle that can be used to receive and decode a wide range of RF signals. The RTL-SDR is based on the Realtek RTL2832U chipset, and has a frequency range of 24MHz to 1.7GHz, and a bandwidth of 3.2MHz. The RTL-SDR is also relatively cheap, with a price of around \$40 AUD. The RTL-SDR is also compatible with a wide range of software, including MATLAB, and GNU radio \cite{SDRdongle}. Given the digital nature of the DAB+ signal, the direct reference signal and the target surveillance signal can in theory be sampled by a singular RTL2832U module as shown by Barrot et.al \cite{DABsingleRadar}. There are also a range of other off the shelf SDR options such as BladeRF and LimeSDR, which provide marginally improved performance at a substantial increase in cost and hardware \cite{SDRhardware}.  Regardless of sampling hardware architecture, based on previous studies and the nature of the DAB+ signal and modulation framework, a sampling rate of 2.048\,MS/s is prudent \cite{IOTpassiveRadar}. This hardware can be scaled up, accordingly providing a reference antenna and a surveillance antenna, as seen in Yardleys 2007 DAB receiver project \cite{antennaArchitecture}. On the contrary, as a potential extension, the use of a single antenna can be attempted with additional reconstruction processing required (providing lower hardware cost), this has been achieved by Barott and Engle \cite{DABsingleRadar}.
 
 \subsubsection{IoT Architecture}
 The IoT architecture in the scope of this project refers to the computational platforms utilised to undertake the digital signal processing which then maps to tracking and detection of the target. Existing studies have demonstrated the ability of off the shelf laptops \cite{FMlowCost}, and there is a few studies that use IoT platforms for FM signal processing \cite{IOTpassiveRadar}. The vital consideration when exploring hardware is the DSP requirements of the bistatic passive detection process (explored further in the next section).
 \par \vspace{0.5cm} 
-\noindent The broad scope capability requirements of the computational platform is identified below in Figure \ref{fig:signal_processing_flow}, which also highlights the division of responsibility between system hardware (IoT computer and SDR hardware).
-
-\begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[
-        block/.style={
-          rectangle,
-          draw,
-          text width=3.5cm,
-          align=center,
-          rounded corners,
-          minimum height=2cm
-        },
-        line/.style={-Stealth, thick},
-        dottedBox/.style={
-          rectangle,
-          draw,
-          dashed,
-          inner sep=6pt,
-          label=above:#1
-        }
-    ]
-    
-    % Define the nodes
-    \node[block] (signalAcq) {Signal Acquisition};
-    \node[block, right=of signalAcq] (reconstruct) {Reconstruction (DAB)};
-    \node[block, right=of reconstruct] (correlate) {Correlation (Range Doppler Map)};
-    
-    % Connect the nodes
-    \draw[line] (signalAcq) -- (reconstruct);
-    \draw[line] (reconstruct) -- (correlate);
-    
-    % Dotted boxes
-    \node[dottedBox=RTL-SDR, fit=(signalAcq)] {};
-    \node[dottedBox=Raspberry Pi / IoT Hardware, fit=(reconstruct) (correlate)] {};
-    
-    \end{tikzpicture}
-    \caption{Block diagram showing the high level hardware process}
-    \label{fig:signal_processing_flow}
-    \end{figure}
+\noindent According to Schupbach et. al \cite{DABprocessingChain}, the broad scope capability requirements of the computational platform and associated processing can be grouped into signal acquisition, signal reconstruction and then the correlation function calculation. 
     
 \noindent A possible IoT device that could be used, and has evidence of previous use as demonstrated by Moser et. al \cite{IOTpassiveRadar} is the Raspberry Pi platform, which despite having increased processing times, demonstrated its functionality. An alternate, higher powered choice in which Sednall demonstrated is the higher powered Nvidia Jetson, which includes faster processing times due to its quad core architecture \cite{FMlowCost}. The price for these options is \$60 compared to \$250 respectively. Ultimately, the choice of embedded IoT hardware for the project can be reduced to the trade off between low cost and processing power, and will be a key consideration in the project plan. Furthermore, there is possibility to design custom hardware to optimise for processing speeds and project cost, for example, a PCB extension utilising a Raspberry Pi with DSP IC chips and/or custom user buttons.
 
 
 
 \subsubsection{Signal Processing and Algorithms} 
+
+Broadly, the goal of the signal processing for this project is to extract a range doppler map from the received reference and surveillance signals. In order to achieve this, a range of steps are required to be undertaken. A range of literature exists for the signal processing of FM illuminator of opportunity signals, including Batches algorithm \cite{DSPfm}. However, given the nature of DAB and its COFDM modulation (explored above), filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}. The use of a singular antenna is affirmed by Barott et. al \cite{DABsingleRadar} who utilised DAB passive radar to track micro-UAVs.
 
 \begin{wrapfigure}{r}{0.6\textwidth} % This places the figure on the right and occupies 60% of the text width
     \centering
@@ -262,17 +228,16 @@ The IoT architecture in the scope of this project refers to the computational pl
     \label{fig:DSP}
 \end{wrapfigure}
 
-Broadly, the goal of the signal processing for this project is to extract a range doppler map from the received reference and surveillance signals. In order to achieve this, a range of steps are required to be undertaken. A range of literature exists for the signal processing of FM illuminator of opportunity signals, including Batches algorithm \cite{DSPfm}. However, given the nature of DAB and its COFDM modulation (explored above), filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}. The use of a singular antenna is affirmed by Barott et. al \cite{DABsingleRadar} who utilised DAB passive radar to track micro-UAVs.
-
-\par \vspace{0.5cm} 
+\par 
 \noindent Figure \ref{fig:DSP} from Poullin \cite{detectionDABmodulation} shows the main steps of the required signal processing, which includes signal acquisition, reconstruction, and correlation. 
 
 \par \vspace{0.5cm} 
 \noindent The scope of this project involves branches 1 through 3, with target analysis representing a logical extension for a more complicated version of the project. 
-\par \vspace{0.5cm} 
 
 \par \vspace{0.5cm} 
 \noindent Once signal has been demodulated, according to Moser et. al, FFT the size of 2048 for the range domain and 512 for the doppler domain can be computed \cite{IOTpassiveRadar}, see Figure \ref{fig:FFT}. This can be combined with a decluttering chain, which can implement something along the lines of a weiner filter, or a matched filter, to remove unwanted signals from the range doppler map \cite{FundamentalsPassiveRadar}.
+
+\noindent Logically, the step above relfects the most computationally intensive process of the project ... hence, considerations with regard to signal processing algorithms will need to be taken in order to keep the overall detection system low cost. Overall, Moser et. al provide a good introductory signal processing chain to utilise as a starting point \cite{IOTpassiveRadar}.
 
 \begin{figure}[htbp]
     \centering
@@ -280,8 +245,6 @@ Broadly, the goal of the signal processing for this project is to extract a rang
     \caption{Correlation and FFT for Range Doppler Mapping \cite{IOTpassiveRadar}}
     \label{fig:FFT}
 \end{figure}
-\par \vspace{0.5cm} 
-\noindent Logically, the step above relfects the most computationally intensive process of the project ... hence, considerations with regard to signal processing algorithms will need to be taken in order to keep the overall detection system low cost. Overall, Moser et. al provide a good introductory signal processing chain to utilise as a starting point \cite{IOTpassiveRadar}.
 
 \subsubsection{Networking with Embedded Hardware} 
 Given that the overall goal of this thesis project is to create a low cost, embedded passive radar detection system, valuable to consider how this would be visualised, be it wired via ethernet / UART to PC or wireless protocol. 
@@ -289,8 +252,8 @@ Given that the overall goal of this thesis project is to create a low cost, embe
 \subsection{Pilot Studies \& Existing PBR Technology}
 As briefly alluded to in the above literature review, there is a plethora of existing research and pilot projects which utilise a range of hardware and illuminator of opportunity signals, including existing commercial products.
 
-\subsubsection{Low-Cost Passive Radar Receiver Based on IoT Hardware - Swiss Army}
-Very informative pilot study utilising both FM radio and DAB+ signals as illuminators of opportunity for an IoT based receiver design. Moser et. al explore the performance of a Raspberry PI GPU and CPU against a quad-core intel i7 equipped PC \cite{IOTpassiveRadar}. This paper also provided a good starting point for information regarding the difference in signal processing between digital (DAB+) and analogue (FM) illuminators of opportunity, including key characteristics as seen in Figure \ref{fig:signals} . 
+\subsubsection{Low-Cost Hardware}
+The Swiss army have conduncted a very informative pilot study utilising both FM radio and DAB+ signals as illuminators of opportunity for an IoT based receiver design. Moser et. al explore the performance of a Raspberry PI GPU and CPU against a quad-core intel i7 equipped PC \cite{IOTpassiveRadar}. This paper also provided a good starting point for information regarding the difference in signal processing between digital (DAB+) and analogue (FM) illuminators of opportunity, including key characteristics as seen in Figure \ref{fig:signals} . 
 
 \begin{figure}[htbp]
     \centering
@@ -302,8 +265,8 @@ Very informative pilot study utilising both FM radio and DAB+ signals as illumin
 \par \vspace{0.5cm} 
 \noindent Moser also provides a summary of the range doppler map generation process which itself is derived from Batches algorithm \cite{DSPfm}, including valuable performance measurements which indicate the efficacy of GPU processing over CPU processing.  The specific hardware utilised in Moser's paper was a Raspberry Pi v3; 1.2GHz Cortex A53 CPU along with a 400MHz VideoCore IV GPU. As of writing, the estimated cost to recreate this exact hardware (including SDR-RTL hardware) would be approximately \$100 AUD, representing a very low cost setup. Noting that hardware has also made significant advancements since the time of the paper (2019), with the Raspberry Pi v5 now available. The paper provides good hardware reference values for real-time processing limits of DAB frame computations, a key consideration area when optimizing for low cost hardware. 
 
-\subsubsection{DTSO Illuminator of Opportunity Research Project}
-Written by Palmer, Palumbo, Van Cao, and Howard on behalf of Australia's Defence Science and Technology Organisation (DTSO), this report provided a good theoretical starting point for literature review, with specific focus on illuminator of opportunity properties \cite{DTSO2009}. Whilst the scope of this proposal is confined to terrestrial illuminators (specifically digital audio), Palmer et. al highlight the wide range of use cases made available by other illuminators, including satellite signals and mobile phone signals. The report also provides a good overview of range doppler mapping, and target classification properties (despite the scope of this proposal not including target classification).
+\subsubsection{Illuminators of Opportunity}
+Throughout the literature review, a range of papers exploring illuminator signals were explored, the DTSO report Written by Palmer, Palumbo, Van Cao, and Howard provides a good theoretical starting point. Whilst the scope of this proposal is confined to terrestrial illuminators (specifically digital audio), Palmer et. al highlight the wide range of use cases made available by other illuminators, including satellite signals and mobile phone signals. The report also provides a good overview of range doppler mapping, and target classification properties (despite the scope of this proposal not including target classification).
 
 \begin{figure}[htbp]
     \centering
@@ -314,8 +277,8 @@ Written by Palmer, Palumbo, Van Cao, and Howard on behalf of Australia's Defence
 
 \noindent As seen above in Figure \ref{fig:rdm}, in the .gif version of the image, the dot can be seen moving upwards (indicating motion away). This example also reflects effective de-cluttering of the RDM, a key step in passive tracking. An important consideration raised in this report is the edge case whereby the target moves along the bistatic ellipse as viewable in Figure \ref{fig: topology}, resulting in the doppler shift to be minimal and making tracking difficult.
 
-\subsubsection{FM Based Low Cost Passive Bistatic Radar Masters Thesis}
-A masters thesis by Sendall, was a very useful reference and pilot given its very similar scope, looking to optimise for cost without sacrificing too much computational performance \cite{FMlowCost}. A valuable takeway from this thesis was the intialisation and definition of project constraints, given the broadness of passive radar use cases and its optimisation areas it will be important to refine the scope scope and constraints.
+\subsubsection{Signal Processing Architecture}
+Once hardware and illuminator signal have been explored the next step is integrating these two and utilising / processing the sampled signals. A masters thesis by Sendall, was a very useful reference and pilot given its very similar scope, looking to optimise for cost without sacrificing too much computational performance \cite{FMlowCost}. A valuable takeway from this thesis was the intialisation and definition of project constraints, given the broadness of passive radar use cases and its optimisation areas it will be important to refine the scope scope and constraints.
 
 \par \vspace{0.5cm} 
 \noindent Sendall provides a hardware overview with valuable comparisons of the processor family, including performance/cost considerations of using DSP or FPGA architecture. Most valuably, he provides comprehensive detail about the signal processing chain, despite its analogue nature, it still provides a good starting point for shared obstacles such as de-cluttering and range doppler mapping.
@@ -350,8 +313,49 @@ Intially, this this project can be broken into manageable milestones throughout 
     \item Implementation of RDM visualisation via chosen network protocol (Due end of week 8, Semester 2, 2024)
     \item Completion of final embedded design and housing along with thesis documentation (Due end of week 12, Semester 2, 2024)
 \end{enumerate}
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        block/.style={
+          rectangle,
+          draw,
+          text width=3.5cm,
+          align=center,
+          rounded corners,
+          minimum height=2cm
+        },
+        line/.style={-Stealth, thick},
+        dottedBox/.style={
+          rectangle,
+          draw,
+          dashed,
+          inner sep=6pt,
+          label=above:#1
+        }
+    ]
+    
+    % Define the nodes
+    \node[block] (signalAcq) {Signal Acquisition};
+    \node[block, right=of signalAcq] (reconstruct) {Reconstruction (DAB)};
+    \node[block, right=of reconstruct] (correlate) {Correlation (Range Doppler Map)};
+    
+    % Connect the nodes
+    \draw[line] (signalAcq) -- (reconstruct);
+    \draw[line] (reconstruct) -- (correlate);
+    
+    % Dotted boxes
+    \node[dottedBox=Antenna $\rightarrow$ SDR Hardware, fit=(signalAcq)] {};
+    \node[dottedBox=Raspberry Pi / IoT Hardware, fit=(reconstruct) (correlate)] {};
+    
+    \end{tikzpicture}
+    \caption{Block diagram showing the high level hardware process}
+    \label{fig:signal_processing_flow}
+\end{figure}
+
 \par \vspace{0.5cm} 
-\noindent These milestones ensure that DSP and signal processing algorithms are implemented and tested in a non-hardware constrained environment, providing valuable benchmarks values. Firstly, the passive bistatic tracking will be undertaken with PC software, while simultaneously in the background, embedded hardware will be analysed, chosen and configured with the goal of scaling the implementaiton onto it by early semester 2. The next milestone will be to extract the RDM and visualise it through an optimal communication / network protocol, allowing viewing of tracking without associated signal processing. Finally, the thesis project will be written up and the final embedded passive radar hardware will be housed, resulting in a small-scale final product.
+\noindent These milestones ensure that DSP and signal processing algorithms are implemented and tested in a non-hardware constrained environment, providing valuable benchmarks values. A visual overview of the required hardware and DSP interaction is provided above in Figure \ref{fig:signal_processing_flow}, putting the pending design choices required into context. Firstly, the passive bistatic tracking will be undertaken with PC software, while simultaneously in the background, embedded hardware will be analysed, chosen and configured with the goal of scaling the implementaiton onto it by early semester 2. The next milestone will be to extract the RDM and visualise it through an optimal communication / network protocol, allowing viewing of tracking without associated signal processing. Finally, the thesis project will be written up and the final embedded passive radar hardware will be housed, resulting in a small-scale final product.
 
 \subsection{Milestone 1 - Implementation of Signal Reception and Processing Algorithms on PC Hardware}
 The initial phase of the project will involve a further comprehensive review of the passive bistatic DSP literature, with the selection and finalising of algorithms. The signal acquisition process will be tested and implemented with the RTL-SDR module, and the processing will be tested through PC hardware (specifically M1 macOS). The concept behind this testing is for familiarisation with the decluttering process and correlation processing. Resources required for this milestone include the RTL-SDR dongle, LPDA antenna, MATLAB and/or similar software to undertake the signal processing. The following sub tasks comprise this milestone:
@@ -446,11 +450,13 @@ At this stage of the process all the signal processing, communication and tracki
     
 
 \section{Ethics Assessment}
-This proposal raises minimal ethical dilemnas.
+Given the technical nature of the project, which strictly involves the use of radar hardware/software for signal processing and does not include any human subjects, human data, or animals, the ethical considerations are significantly minimal. There are no planned interventions or interactions with human participants, and as such, there is no need for human ethics approval or the consideration of issues such as consent, privacy, and confidentiality that are typically associated with human subject research.
+
 
 % References (You will need to use BibTeX to manage your references)
 % The bibliography style can be changed to suit your needs
 \newpage
+\section*{References} %HOW TO REMOVE DOUBLE?
 \bibliographystyle{plain}
 \bibliography{references}
 
