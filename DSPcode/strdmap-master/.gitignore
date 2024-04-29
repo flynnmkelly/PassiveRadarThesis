@@ -1,0 +1,6 @@
+*.swp
+octave-core
+*~
+# python temporary files
+__pycache__
+*.pyc

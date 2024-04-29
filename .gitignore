@@ -1,3 +1,8 @@
+## Sample data 
+*.bin
+
+
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
