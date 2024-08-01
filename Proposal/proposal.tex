@@ -170,7 +170,7 @@ Illuminator signals are not limited to terrestrial signals, and can also include
 \subsubsection{Range Doppler Mapping}
 Range doppler mapping is a technique used to determine the distance and relative velocity of targets by analyzing the frequency shift (Doppler shift) and time delay of the received signals after they bounce off the targets. The signal response of a target at a particular range and velocity can be predicted by the ambiguity function seen in equation 4 \cite{INTRO2017}. 
 \begin{equation}
-    \chi(\tau, f) = \int s_1(t) s_2^*(t - \tau) e^{j2\pi f t} \, dt
+    \chi(\tau, f) = \int s_{reference}(t) s_{received}^*(t - \tau) e^{j2\pi f t} \, dt
 \end{equation}
 Where:
 \begin{multicols}{2}
