@@ -1,0 +1,39 @@
+%-----------------------
+% `proposal/main.tex' is the proposal document root
+%-----------------------
+\documentclass[12pt,a4paper,oneside]{article}
+
+%-----------------------
+% Setup
+%-----------------------
+\input{../common/tex/globals}
+\input{../common/tex/packages}
+\input{../common/tex/setup}
+\input{../common/tex/commands}
+
+% Relative (from local folder) path to biber-style reference list
+\addbibresource{../common/references/references.bib}
+
+% Relative (from local folder) path to where images are stored
+\graphicspath{ {../common/img} }
+
+% Set document metadata
+\hypersetup{ 	
+    pdfsubject = {Project Proposal: \titletext},
+    pdftitle = {\titletext},
+    pdfauthor = {\authortext}
+}
+
+%-----------------------
+% Document contents
+%-----------------------
+\begin{document}
+
+\include{sections/00_cover}
+\tableofcontents
+\include{sections/01_introduction}
+\include{sections/02_background}
+\include{sections/03_project_plan}
+\include{sections/04_references}
+
+\end{document}

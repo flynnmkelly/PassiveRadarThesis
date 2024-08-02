@@ -1,0 +1,53 @@
+%-----------------------
+% `thesis/main.tex' is the Thesis document root
+%-----------------------
+\documentclass[12pt,a4paper,oneside]{book}
+
+%-----------------------
+% Setup
+%-----------------------
+\input{../common/tex/globals}
+\input{../common/tex/packages}
+\input{../common/tex/setup}
+\input{../common/tex/commands}
+
+% Relative (from local folder) path to biber-style reference list
+\addbibresource{../common/references/references.bib}
+
+% Relative (from local folder) path to where images are stored
+\graphicspath{ {../common/img} }
+
+% Set document metadata
+\hypersetup{ 	
+    pdfsubject = {\titletext},
+    pdftitle = {\titletext},
+    pdfauthor = {\authortext}
+}
+
+%-----------------------
+% Document contents
+%-----------------------
+\begin{document}
+
+    % Front matter
+    \input{sections/00_front_matter/00_cover}
+    \input{sections/00_front_matter/01_letter}
+    \input{sections/00_front_matter/02_acknowledgements}
+    \input{sections/00_front_matter/03_abstract}
+    \tableofcontents
+    \listoffigures
+    \listoftables
+
+    % Body
+    \input{sections/01_body/00_introduction}
+    \input{sections/01_body/01_background}
+    \input{sections/01_body/02_implementation}
+    \input{sections/01_body/03_results}
+    \input{sections/01_body/04_discussion}
+    \input{sections/01_body/05_conclusion}
+
+    % Rear matter
+    \printbibliography[heading=bibintoc,heading=bibnumbered]
+    \input{sections/02_rear_matter/00_appendix}
+
+\end{document}
