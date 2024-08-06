@@ -12,7 +12,7 @@
 \input{../common/tex/commands}
 
 % Relative (from local folder) path to biber-style reference list
-\addbibresource{../common/references/references.bib}
+% \addbibresource{../common/references/references.bib}
 
 % Relative (from local folder) path to where images are stored
 \graphicspath{ {../common/img} }
@@ -41,13 +41,14 @@
     % Body
     \input{sections/01_body/00_introduction}
     \input{sections/01_body/01_background}
-    \input{sections/01_body/02_implementation}
-    \input{sections/01_body/03_results}
-    \input{sections/01_body/04_discussion}
+    \input{sections/01_body/02_litreview}
+    \input{sections/01_body/03_methodology}
+    \input{sections/01_body/04_results}
     \input{sections/01_body/05_conclusion}
 
-    % Rear matter
-    \printbibliography[heading=bibintoc,heading=bibnumbered]
+
+    \bibliographystyle{plain} % Choose your bibliography style
+    \bibliography{../common/references/references} % The name of your .bib file (without extension)
     \input{sections/02_rear_matter/00_appendix}
 
 \end{document}
