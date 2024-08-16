@@ -2,31 +2,50 @@
 \todo[inline]{Introduction: introduce the problem space and (at a high level) any relevant problem-space background. Summarise the contents of the remaining sections in the document (excluding appendices). \\ UPDATE FOR FINAL}
 
 % CONTENT
-This proposal introduces the theory, motivations and planned process for the creation of a low cost embedded bistatic passive radar detection system utilising a to be confirmed digital broadcast signal as the illuminator of opportunity. 
+This section will contain a clear definition of the thesis topic, goals, project scope, and
+relevance of the project. 
 
 \section{Topic and Relevance}
-Passive radar detection technology is a class of radar detection whereby the radar system does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}.
-\par
-\vspace{0.5cm} 
-\noindent The technology has a number of advantages over traditional radar systems. It is covert, as it does not emit any radiation, and is therefore difficult to detect and directly jam, leading to a concentrated interest from defence cirlces (NEED CITATION). It is also relatively cheap, as it does not require a dedicated transmitter and hence has less energy consumption. Conversely, it has a number of disadvantages, such as a lower signal-to-noise ratio, and a requirement for a relatively large amount of computational power to process the received signals \cite{INTRO2017}.
+Passive radar detection technology is a class of radar detection whereby the radar system does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}. The technology has a number of advantages over traditional radar systems. It is covert, as it does not emit any radiation, and is therefore difficult to detect and directly jam, leading to a concentrated interest from defence cirlces \cite{DTSO2009}. It is also relatively cheap, as it does not require a dedicated transmitter and hence has less energy consumption. Conversely, it has a number of disadvantages, such as a lower signal-to-noise ratio, and a requirement for a relatively large amount of computational power to process the received signals \cite{INTRO2017}.
 
 \par
 \vspace{0.5cm} 
-\noindent Bistatic passive radar detection has a wide range of applications centered around situational awareness, including air traffic control, border security, and environmental monitoring. Embedding the passive radar technology is a relatively new field buoyed by recent and increasing developments in computational power on Internet of Things (IoT) devices \cite{IOTpassiveRadar}. This project aims to reinforce and build on existing technology by creating a low-cost, modular, small-scale embedded passive radar detection system. Moreover, this project will also explore the possibility of scaling up this bistatic setup to a multistatic system, and the potential advantages and disadvantages of such. 
+Bistatic passive radar detection has a wide range of applications centered around situational awareness, including air traffic control, border security, and environmental monitoring. Embedding the passive radar technology is a relatively new field buoyed by recent and increasing developments in computational power on Internet of Things (IoT) devices \cite{IOTpassiveRadar}. Key components and processes of a passive radar RX system include the antenna, the receiver hardware (software defined radio), signal sampling hardware and memory, along with the compute to complete the digital signal processing \cite{FundamentalsPassiveRadar}. Advantages of implementing some or even all of these components in a low cost manner include increased scaleability, portability, and lower reliance on external high cost hardware such as a PC.
 
-\par
-\vspace{0.5cm} 
-\noindent More specifically, the project will focus on streamlining the signal processing and computational requirements of both the line of sight signal and the reflected target signal onto a singular embedded setup, without PC hardware. This will be achieved by using a combination of existing embedded IoT hardware, and through using existing DSP (digital signal processing) and radar filtering algorithms. Initially, the illuminator of opportunitys explored are digital broadcast signals, and the target signal will be aerial vehicles. Noting that a range of other terrestrial illuminator signals can be utilised, often depending on the required use case, such as the tracking target and environment \cite{DABsignal}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \vspace{1cm} 
+% \textbf{CUT (not relevant)}: Moreover, this project will also explore the possibility of scaling up this bistatic setup to a multistatic system, and the potential advantages and disadvantages of such.
+% This project aims to reinforce and build on existing technology by creating a low-cost, modular, small-scale embedded passive radar detection system.  
 
-\section{Goals}
-The primary goals of the project include the following, provided in order of logical progression;
+% \par
+% \vspace{0.5cm} 
+% \noindent More specifically, the project will focus on streamlining the signal processing and computational requirements of both the line of sight signal and the reflected target signal onto a singular embedded setup, without PC hardware. This will be achieved by using a combination of existing embedded IoT hardware, and through using existing DSP (digital signal processing) and radar filtering algorithms. Initially, the illuminator of opportunitys explored are digital broadcast signals, and the target signal will be aerial vehicles. Noting that a range of other terrestrial illuminator signals can be utilised, often depending on the required use case, such as the tracking target and environment \cite{DABsignal}.
+% %%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Aims and Objectives}
+To explore the feasibility of a low cost embedded passive bistatic radar detection, and provide a scaleable proof of concept, this thesis aims to provide a user friendly testbed for digital signal based passive radar detection. The work conducted in this thesis and the eventual prototype hopes to decrease the barriers to entry for passive radar detection technology, and provide a platform for further research and development in the field. At a high level, the primary objectives of this thesis project are;
 \begin{itemize}
-    \item Implement and investigate passive radar detection algorithms on high end computer architecture (PC) connected to SDR hardware and antenna for line of sight and target signal processing.
-    \item Scaling down the passive radar detection system and associated algorithms to run on embedded IoT hardware, and investigate the computational and signal processing requirements, including the possible design of custom hardware such as peripheral functionality and printed circuit boards. A central feature of this specific goal is its ideally low cost nature.
-    \item Verify functionality of low cost embedded passive radar detection system in a controlled environment against higher power computing results, and investigate the potential for scaling up to a multistatic system.
-    \item Design and develop suitable housing for embdedded project implementation with ideal features such as modularity, portability and potential scaleability. 
+    \item Develop an understanding and proof of concept of passive radar detection algorithms on low cost single board computers (SBC) connected to software defined radio (SDR) hardware,
+    \item Design and implement a small sized modular passive radar detection system on single board computer hardware with an emphasis on user friendliness and scaleability, and to
+    \item Verify the functionality of the low cost embedded passive radar detection system in a controlled environment against higher power computing results, and investigate the potential for scaling up to a multistatic system through a network.
 \end{itemize}
 
 \section{Scope}
+This thesis focuses on the development of a hardware testbed based on software defined radio (SDR) and single board computer (SBC) technology. The scope of this thesis project is limited to the following:
 
-\section{Relevance}
+\begin{itemize}
+    \item The development of a passive radar detection system using existing digital broadcast signals as illuminators of opportunity,
+    \item The design of a small scale, modular, low cost system using single board computer hardware, specically with simple user buttons to commence and cease data collection and processing, and 
+    \item The verification of the passive radar detection system performance and latency in a controlled environment agains higher cost PC hardware.
+    \item Exploring the potential for scaling up the system to a multistatic, remote RX system through a network.
+\end{itemize}
+
+\noindent
+Given that passive radar based detection is a broad topic with much academic progress and commercial technological development, this thesis will not aim to cover the broad subject area. Consequently, the following topics are out of scope for this project:
+
+\begin{itemize}
+    \item The development of a complete bistatic passive radar detection system optimized for low latency, and object classification,
+    \item The development of a full multistatic passive radar detection system, whereby angle of approach and precise location of a target can be determined, and
+    \item The development of a passive radar detection system using non-digital broadcast signals as illuminators of opportunity.
+    \item The modification and development of digital signal processing / detection algorithms optimized for latency and customised hardware applications.
+\end{itemize}
