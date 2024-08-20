@@ -19,12 +19,6 @@ The key and unique feature of passive radar is its utilisation of existing illum
 \vspace{0.5cm} 
 \noindent The geometry of passive bistatic radar can be further explored and equations can be mapped accordingly, with the distance between the transmitter and receiver \textit{R} being determined by known quantities such as the baseline as reflected below in Figure \ref{fig:geometry}.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{geomPR.jpg}
-    \caption{Bistatic radar geometry \cite{FundamentalsPassiveRadar}}
-    \label{fig:geometry}
-\end{figure}
 
 \par \vspace{0.5cm} 
 \noindent The bistatic range \( R_R \) is given by:
@@ -63,6 +57,14 @@ Where:
     \end{itemize}
 \end{multicols}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{geomPR.jpg}
+    \caption{Bistatic radar geometry \cite{FundamentalsPassiveRadar}}
+    \label{fig:geometry}
+\end{figure}
+
+\par \vspace{0.5cm}
 \noindent The denominator of the bistatic radar equation includes the term \( \frac{1}{R_T^2 R_R^2} \).This term implies that with omnidirectional antenna patterns, the contours of constant signal-to-noise ratio (SNR) are described by the equation \( R_T R_R = \text{constant} \), which represents Ovals of Cassini. These ovals represent the locations in a given PBR co-ordinate sytem where the distances from the target to the transmitter and receiver remain the same. In the case of directional antennas, these contours are altered. Moreover, the signal-to-noise ratio is minimized when the target is equidistant from the transmitter and receiver (\( R_T = R_R \)), and maximized when the target is closer to either the transmitter or receiver \cite{FundamentalsPassiveRadar}.
 
 \par \vspace{0.5cm} 
@@ -153,13 +155,49 @@ There are also a range of other off the shelf SDR options such as BladeRF and Li
 
 
 \section{Digital Signal Processing}
-Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \todo{batches citation needed}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. The use of a singular antenna is affirmed by Barott et. al \cite{DABsingleRadar} who utilised DAB passive radar to track micro-UAVs.
+Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \todo{batches citation needed}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. The use of a singular antenna / channel setup is affirmed by Barott et. al \cite{DABsingleRadar} who utilised DAB passive radar to track micro-UAVs.
+
+\begin{wrapfigure}{r}{0.6\textwidth} % This places the figure on the right and occupies 60% of the text width
+    \centering
+    \includegraphics[width=0.45\textwidth]{DSPprocess.png}
+    \caption{Main steps of signal processing \cite{detectionDABmodulation}}
+    \label{fig:DSP}
+\end{wrapfigure}
+
+
+\par \vspace{0.5cm}
+\noindent Figure \ref{fig:DSP} from Poullin \cite{detectionDABmodulation} shows the main steps of the required signal processing, which includes signal acquisition, reconstruction, and correlation. 
+
+\par \vspace{0.5cm} 
+\noindent Once signal has been demodulated, according to Moser et. al, a FFT the size of 2048 for the range domain and 512 for the doppler domain can be computed \cite{IOTpassiveRadar}, see Figure \ref{fig:FFT}. This can be combined with a decluttering chain, which can implement something along the lines of a weiner filter, or a matched filter, to remove unwanted signals from the range doppler map \cite{FundamentalsPassiveRadar}.
+
+\noindent Logically, the step above relfects the most computationally intensive process of the project ... hence, considerations with regard to signal processing algorithms will need to be taken in order to keep the overall detection system low cost. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{FFT.png}
+    \caption{Correlation and FFT for Range Doppler Mapping \cite{IOTpassiveRadar}}
+    \label{fig:FFT}
+\end{figure}
+
+\todo[inline]{more general detail about the processing chain?}
 
 
 
 \section{IoT Architecture}
+\todo[inline]{keep section strictly about theory, not about specific hardware}
+
+The IoT architecture in the scope of this project refers to the computational platforms utilised to undertake the digital signal processing which then maps to tracking and detection of the target. Existing studies have demonstrated the ability of off the shelf laptops \cite{FMlowCost}, and there is a few studies that use IoT platforms for FM signal processing \cite{IOTpassiveRadar}. The vital consideration when exploring hardware is the DSP requirements of the bistatic passive detection process (explored further in the next section).
+\par \vspace{0.5cm} 
+\noindent According to Schupbach et. al \cite{DABprocessingChain}, the broad scope capability requirements of the computational platform and associated processing can be grouped into signal acquisition, signal reconstruction and then the correlation function calculation. 
+    
+\noindent A possible IoT device that could be used, and has evidence of previous use as demonstrated by Moser et. al \cite{IOTpassiveRadar} is the Raspberry Pi platform, which despite having increased processing times, demonstrated its functionality. An alternate, higher powered choice in which Sednall demonstrated is the higher powered Nvidia Jetson, which includes faster processing times due to its quad core architecture \cite{FMlowCost}. The price for these options is \$60 compared to \$250 respectively. Ultimately, the choice of embedded IoT hardware for the project can be reduced to the trade off between low cost and processing power, and will be a key consideration in the project plan. Furthermore, there is possibility to design custom hardware to optimise for processing speeds and project cost, for example, a PCB extension utilising a Raspberry Pi with DSP IC chips and/or custom user buttons.
 
 \section{Networking with Embedded Hardware}
+
+Given that the overall goal of this thesis project is to create a low cost, embedded passive radar detection system, valuable to consider how this would be visualised, be it wired via ethernet / UART to PC or wireless protocol. 
+
+\todo[inline]{add more about the theory of TCP/IP and networking over uq cloud, etc.}
 
 
 
