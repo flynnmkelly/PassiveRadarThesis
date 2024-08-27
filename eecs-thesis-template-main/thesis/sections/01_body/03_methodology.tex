@@ -22,8 +22,17 @@ The low cost RTL-SDR was chosen as the initial SDR module for testbed prototypin
     \label{fig:rtlSDR}
 \end{figure}
 
-The RTL-SDR is based on the Realtek RTL2832U chipset, and has a frequency range of 24MHz to 1.7GHz, and a bandwidth of 3.2MHz. The RTL-SDR is also relatively cheap, with a price of around \$40 AUD. Moreover, the RTL-SDR is compatible with a wide range of software, including MATLAB, and GNU radio \cite{SDRdongle}.
-The RTL-SDR was tested with a range of software as mentioned in \ref*{sec:SDRsoftware} to ensure hardware was correctly functioning and to gain familiarity with the process. Specifically, given the nature of the digital signals utilised in this project, it was tested at the appropriate frequency range (approx 200Mhz). Furthemore, this was valuable to obtain ball park noise floor measurements, which eventuated to around -80dB when using the basic antenna.
+The RTL-SDR is based on the Realtek RTL2832U chipset, and has a frequency range of 24MHz to 1.7GHz, and a bandwidth of 3.2MHz. The RTL-SDR is also relatively cheap, with a price of around \$40 AUD, coming with compatibility to a wide range of software, including MATLAB, and GNU radio \cite{SDRdongle}. More specifically, the RTL-SDR was originally designed as a DVB-T receiver for digital TV, but due to its versatility, it has been repurposed by the hobbyist community for a wide range of RF signal reception applications. Fundamentally, the RTL-SDR is compised of two IC chips as seen in the block diagram figure below \ref*{fig:rtlSDRblock}; the RTL2832U, which is the digital TV demodulator, and the R820T, which is the tuner. The R820T is the chip that allows the RTL-SDR to tune to a wide range of frequencies, converting those signal frequencies to an intermediate baseband frequency which is processed by the RTL2832U. Inside the RTL2832U, the signal is then digitized and demodulated and sent to the host computer via USB.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{rtlSDRchips.png}
+    \caption{RTL-SDR Block Diagram \cite{RTLsdrBlockDiagram}}
+    \label{fig:rtlSDRblock}
+\end{figure}
+
+\par \noindent
+The RTL-SDR was tested with a range of software as mentioned in \ref*{sec:SDRsoftware} to ensure hardware was correctly functioning and to gain familiarity with the process. Specifically, given the nature of the digital signals utilised in this project, it was tested at the appropriate frequency range (approx 200Mhz). Furthemore, this was valuable to obtain ball park noise floor measurements, which eventuated to around -80dB when using the basic antenna. 
 
 \vspace{0.5cm} \noindent 
 \textbf{(ii) MODEL X Implementation}
@@ -62,7 +71,10 @@ The results in Table \ref{tab:diskperf} clearly show the obtained significant pe
 
 \begin{itemize}
     \item \textbf{File System:} The NVME SSD was formatted with the ext4 file system, which is the default file system for most Linux distributions. 
-    \item \textbf{Mounting:} The NVME SSD was mounted to the RPi5 at the following location: \texttt{/mnt/nvme}
+    \item \textbf{Mounting:} The NVME SSD was mounted to the RPi5 at the following location: \texttt{/mnt/nvme0n1}
+    \item \textbf{Connector}: PCIe x4 interface Gen 2.0, which is a high-speed interface standard that is commonly used for connecting storage devices to a computer.
+    \item \textbf{Supported NVMe Drives}: Supports M.2 NVMe drives (2280 size)
+    \item \textbf{SSD Model:} Patriot P300 NVMe M.2 SSD, 128GB capacity, used for both storage and booting the RPi5.
 \end{itemize}
 
 
