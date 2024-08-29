@@ -141,7 +141,10 @@ Where:
 
 
 \section{Radio Hardware}
-Given the low cost aims of this testbed, hardware cost and performance is a major consideration. Luckily, the proliferation of general purpose Software Defined Radio (SDR) hardware modules has enabled easy access to radio frequency (RF) signals \cite{SDRtheory}. In general, a SDR system can exist purely as a receiver (lower cost modules) or as a transceiver, whereby connected software (e.g. PC) are utilised for the modulation and demodulation of signals \cite{SDRgeneralInfo}. The SDR system can be used to sample the RF signal, and then process it digitally, enabling the use of a wide range of software tools for further signal processing. Typically, as seen in the block diagram below in figure \ref{fig:SDRblock}, SDR's comprise of an analogue front end, an analogue to digital converter (ADC) / digital to analagoue convertor (DAC), and some sort of band processing \cite{SDRgeneralInfo}.
+Fundamentally, the relevant radio hardware for a passive radar project can be broken into the antenna and the SDR module. Given the low cost aims of this testbed, hardware cost and performance is a major consideration. 
+
+\subsection{Software Defined Radio \label{sec: SDRdongle}}
+Luckily, the proliferation of general purpose SDR hardware modules has enabled easy access to radio frequency (RF) signals \cite{SDRtheory}. In general, a SDR system can exist purely as a receiver (lower cost modules) or as a transceiver, whereby connected software (e.g. PC) are utilised for the modulation and demodulation of signals \cite{SDRgeneralInfo}. The SDR system can be used to sample the RF signal, and then process it digitally, enabling the use of a wide range of software tools for further signal processing. Typically, as seen in the block diagram below in figure \ref{fig:SDRblock}, SDR's comprise of an analogue front end, an analogue to digital converter (ADC) / digital to analagoue convertor (DAC), and some sort of band processing \cite{SDRgeneralInfo}.
 
 \begin{figure}[htbp]
     \centering
@@ -174,6 +177,25 @@ A plethora of other SDR modules exist, with varying costs and capabilities. A ra
 
 As performance increases for the SDR's above so does the unit cost, which is an important consideration for the testbed design explored in scection \ref*{sec:hardware}. As seen in table \ref{tab:SDRcomparison}, other than the RTL-SDR all of the SDR's have a large bandwidth making them suitable for digital illuminators, furthemore, the ADC sampling bits are often larger, resulting in more more accurate signals. However, the increased resolution of an ADC also results in larger storage requirements and potentially bottlenecks in the processing chain \cite{SDRmoduleComparison}. Another interesting specification to note which is not seen on \ref*{tab:SDRcomparison} is the the number of RX channels. The RTL-SDR has one RX channel, whereas the USRP has two RX channels, which can be used to receive two signals simultaneously. This could be useful for the testbed, as it would allow for the simultaneous reception of the illuminator signal and the target signal, which could be used to improve the accuracy of the passive radar system. Specifically, the KrakenSDR features up to five channels, based on clustered RTL R820T2 tuners along with hardware to ensure the synchronisation of the channels \cite{KrakenSDR}. A key advantage of the KrakenSDR in passive radar receiver systems is their ability to achieve angle of direction measurements, which can be used to determine the location of the target as shown by Cass \cite{KrakenSDR}.
 
+\subsection{Antenna \label{sec: antennaBackground}}
+Quite simply defined by the IEEE as \textit{That part of a transmitting or receiving system that is designed to radiate or to receive electromagnetic waves} \cite{AntennaIEEE}, an antenna is crucial for any radio system, and in the case of passive bistatic radar, receiving all relevant signals. This section will provide a brief background of the key concepts and types of antennas relevant to passive bistatic radar. The ITEE standard definition of terms for antennas \cite{AntennaIEEE} also succinctly defines the following terms which are relevant;
+\begin{enumerate}
+    \item \textbf{Radiation Pattern}: This describes the angular variation in radiation at constant distances from the antenna. The radiation pattern depends on the signal strength and is categorized into three main types: Isotropic, Directional, and Omnidirectional.
+    
+    \item \textbf{Directivity}: Defined as the ratio of the power density in the direction of the pattern's maximum to the average power density at the same distance from the antenna.
+    
+    \item \textbf{Gain}: Closely related to directivity but includes losses. Gain is defined as the directivity minus any losses experienced by the antenna.
+    
+    \item \textbf{Polarisation}: This refers to the nature of the electric field radiated by the antenna. If the polarisation direction is not specified, it is assumed to be in the direction of maximum gain.
+    
+    \item \textbf{Bandwidth}: The range of frequencies over which the antenna operates effectively.
+    
+    \item \textbf{Beamwidth}: The angle between two points on the radiation pattern where the power is at its maximum. The two main types of beamwidth are Half Power Beamwidth (HPBW) and First Null Beamwidth (FNBW).
+    
+    \item \textbf{Impedance}: The ratio of voltage to current at the antenna terminals.
+\end{enumerate}
+
+As with considering the SDR module, the cost versus performance trade-off is also a key consideration when selecting an antenna. The most common types of antennas used in passive radar systems are the dipole antenna and the Yagi-Uda antenna. The dipole antenna is a simple, low-cost antenna that is easy to construct and has a wide bandwidth. The Yagi-Uda antenna is a more complex, directional antenna that has a higher gain and a narrower bandwidth. Given the utilisation of digital broadcast signals with relatively high power, a simple dipole antenna may be sufficient for the testbed, however, the Yagi-Uda antenna may be required for more complex applications.
 
 
 \section{Digital Signal Processing}
