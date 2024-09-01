@@ -141,9 +141,20 @@ The above table reflects the high gain of the Yagi-Uda antenna, which is a direc
 
 
 \subsection{Testbed Design \label{sec:testbed}}
+Building off the aforementioned hardware components, it was then necessary to develop a physical testbed setup that would allow for the SDR receiver module to be connected to the embedded computing platform, and for the entire system to be powered and networked. Also, given the scope of the project, it was necessary to have a protective encasing for the Rpi5 which also implemented user functionality (ie. pushbuttons and LED's). The testbed was designed to be portable and easily deployable, with the following key components and features:
 
+\todo[inline]{ADD IMAGE OF TESTBED}
 
+\begin{itemize}
+    \item \textbf{Enclosure:} A custom 3D printed enclosure was designed to house the RPi5, the RTL-SDR, and the NVME SSD HAT seen in \ref{fig:Rpi5}. The enclosure was designed to be compact and portable, with a small form factor that could be easily transported and deployed in various environments. The enclosure was designed to be easily opened and closed, with a removable top panel that allowed for easy access to the internal components. The printed acrylic was also designed for cooling purposes, with ventilation holes on the top and sides of the enclosure to allow for airflow, bolstered by the Rpi5 active cooling fan and heatsink.
+    \item \textbf{User Interface:} It was envisaged that the testbed have some sort of capability that would enable physical triggering of PBR sampling and processing \todo{REMOTE??}. Arcade style pushbuttons with LED's were selected to facilitate this interface \cite{pushbuttons}. The pushbuttons were connected to the GPIO pins of the RPi5, and were programmed to trigger the PBR sampling and processing functions (implemented via python scripts). The LED's were used to indicate the status of the PBR system, with different colours indicating different states of the system.
+    \item \textbf{Power Supply:} A 5V / 15W power supply was used to power the RPi5, with a USB-C connector that allowed for easy connection to the RPi5. The power supply was connected to a power strip that allowed for multiple enclosures to be powered from a single power source.
+    \item \textbf{Networking:} The ethernet port on the Rpi5 was left unobstructed by the case for potential wired networking. With the main focus of being geared towards Wi-Fi based networking which was all facilitated by the Rpi5 system on chip.\todo{network details}
+    \item \textbf{Radio Front End:} It was intended for the SDR module to be connected via the USB 3.0 port with the enclosure not designed to house the SDR unit (for versatility). Per SDR functionality, the antenna was connected via coaxial cable, also not housed in the enclosure. 
+    
+\end{itemize}
 
+In summary, the testbed was designed to be a portable, easily deployable system that could be used to test and validate the passive radar detection system. The enclosure was designed to house the RPi5, the NVME HAT, with the remaining system hardware components not specific to the testbed itself (possible to change out). This part of the project design was important for achieving the primary objectives, notably objective 2 as stated in \ref{sec:aims}.
 
 \section{Software}
 \subsection{SDR Software \label{sec:SDRsoftware}}
