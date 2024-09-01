@@ -87,7 +87,7 @@ Illuminator signals are not limited to terrestrial signals, and can also include
 \par \vspace{0.5cm} 
 \noindent Typical characteristics of Australian DAB+ signals include frequency of just over 200MHz, bandwidth of approximately 1.5MHz, and a minimal output power of 10kW effective radiated power (ERP), consequently covering a large area \cite{DABfeatures}. These digital signals employ a modulation scheme called COFDM (coded orthogonal frequency division multiplexing), which is a form of multi-carrier modulation that is robust against multipath interference \cite{INTRO2017}. COFDM works by dividing the signal into multiple, simultaneous streams which are orthogonal to each other, modulated at a different frequency, maximising robust signal propogation. This is particularly useful in the context of passive radar, as it allows for the target and reference signal to be received by the passive radar system even if it has been reflected off multiple surfaces, such as buildings or trees.
 
-\todo[inline]{FM / other signals: why / why not?}
+\todo[inline]{FM / other signals: why / why not? ALSO TALK ABOUT THE DAB STANDARD SPECIFICALLY}
 
 \par \vspace{0.5cm} 
 \noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}.
@@ -195,7 +195,8 @@ Quite simply defined by the IEEE as \textit{That part of a transmitting or recei
     \item \textbf{Impedance}: The ratio of voltage to current at the antenna terminals.
 \end{enumerate}
 
-As with considering the SDR module, the cost versus performance trade-off is also a key consideration when selecting an antenna. The most common types of antennas used in passive radar systems are the dipole antenna and the Yagi-Uda antenna. The dipole antenna is a simple, low-cost antenna that is easy to construct and has a wide bandwidth. The Yagi-Uda antenna is a more complex, directional antenna that has a higher gain and a narrower bandwidth. Given the utilisation of digital broadcast signals with relatively high power, a simple dipole antenna may be sufficient for the testbed, however, the Yagi-Uda antenna may be required for more complex applications.
+
+As with considering the SDR module, the cost versus performance trade-off is also a key factor when selecting an antenna. The most common types of antennas used in passive radar systems are the dipole antenna and the Yagi-Uda antenna. The dipole antenna is a simple, low-cost antenna that is easy to construct and has a wide bandwidth. The Yagi-Uda antenna is a more complex, directional antenna that has a higher gain and a narrower bandwidth. Given the utilisation of digital broadcast signals with relatively high power, a simple dipole antenna may be sufficient for the testbed, however, the Yagi-Uda antenna may be required for more complex applications. High gain directional antennas can be chained together to receive signals from all directions, and in a passive radar context, determine the direction of the target \cite{KrakenSDR}.
 
 
 \section{Digital Signal Processing}
@@ -230,16 +231,37 @@ Broadly, the goal of the signal processing for general passive bistatic radar is
 
 
 \section{IoT Architecture}
-\todo[inline]{keep section strictly about theory, not about specific hardware}
 
-The IoT architecture in the scope of this project refers to the computational platforms utilised to undertake the digital signal processing which then maps to tracking and detection of the target. Existing studies have demonstrated the ability of off the shelf laptops \cite{FMlowCost}, and there is a few studies that use IoT platforms for FM signal processing \cite{IOTpassiveRadar}. The vital consideration when exploring hardware is the DSP requirements of the bistatic passive detection process (explored further in the next section).
+The IoT architecture in the scope of this project refers to the computational platforms utilised to undertake the digital signal processing which then maps to tracking and detection of the target. At a high level, ITEE defines the Internet of Things (IoT) as \textit{"as a world of interconnected things that are capable of sensing, actuating, and communicating among themselves and with the environment ... provides the ability to share information and autonomously respond to real/physical world events by triggering processes and creating services with or without direct human intervention"} \cite{IoTdefinition}. In terms of PBR, existing studies have demonstrated the ability of off the shelf laptops \cite{FMlowCost}, and there is a few studies that use IoT platforms for FM signal processing \cite{IOTpassiveRadar}. The vital consideration when exploring hardware are the DSP and sampling requirements for a given illuminator signal and antenna configuration. More broadly, IoT hardware has been used in a range of general tracking and detection applications. A prime example of this is the Flightradar24 service which utilises a network of ADS-B receivers to track aircraft in real time, where they provide a hardware kit of a Raspberry Pi and a DVB-T dongle (RTL-SDR) \cite{flightradar24}, channelling the data to a central server for processing and mapping. 
 
 \par \vspace{0.5cm} 
-\noindent According to Schupbach et. al \cite{DABprocessingChain}, the broad scope capability requirements of the computational platform and associated processing can be grouped into signal acquisition, signal reconstruction and then the correlation function calculation. 
+\noindent According to Schupbach et. al \cite{DABprocessingChain}, the broad scope capability requirements of the computational platform and associated processing can be grouped into signal acquisition, signal reconstruction and then the correlation function calculation. With a single board computer, this can be largely achieved through a combination of software libraries along with python script, however the hardware facilitating this processing is a key consideration. Largely, the IoT hardware is limited to single board computers, as microcontroller units (MCU) are not capable of the sampling and detection processing requirements, along with the fact that the project requires a full operating system for relevant SDR libraries. Exploring other potential architecture such as FPGA's, again are not as well suited, given their high cost and complexity, although their is precedent for the signal processing and recording \cite{FPGAhardware}. A range of single board computers are available, and can be compared primarily based on their processing power, memory / memory access, and cost \cite{sbc_hardware}, as viewed in the table below.
 
-\todo[inline]{Table Comparing Embedded Platforms}
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{|p{3cm}|X|X|X|X|X|p{2cm}|}
+    \hline
+    \textbf{SBC} & \textbf{CPU} & \textbf{RAM} & \textbf{Storage Access} & \textbf{OS Support} & \textbf{Size (mm)} & \textbf{Price (USD)} \\
+    \hline
+    \textbf{Raspberry Pi Zero 2 W} & Quad-core Cortex-A53, 1 GHz & 1GB & microSD & Raspberry Pi OS, Linux & 65 x 30 & 15 \\
+    \hline
+    \textbf{Raspberry Pi 4} & Quad-core Cortex-A72, 1.5 GHz & 2/4/8GB & microSD, USB & Raspberry Pi OS, Linux & 85.6 x 56.5 & 35-75 \\
+    \hline
+    \textbf{Raspberry Pi 5} & Quad-core Cortex-A76, 2.4 GHz & 8GB & microSD, PCIe (through HAT), USB & Raspberry Pi OS, Linux & 85.6 x 56.5 & from 60 \\
+    \hline
+    \textbf{Nvidia Jetson Nano} & Quad-core Cortex-A57, 1.43 GHz & 4GB & microSD, PCIe (through adapter) & Ubuntu, JetPack & 100 x 80 & 100 \\
+    \hline
+    \textbf{Orange Pi 5} & Octa-core Cortex-A76/A55, 2.0 GHz & 8GB & eMMC, microSD, PCIe & Android, Linux & 90 x 60 & 80 \\
+    \hline
+    \end{tabularx}
+    \caption{Comparison of Single Board Computers \cite{sbc_hardware}}
+    \label{tab:sbc_comparison}
     
-\noindent A possible IoT device that could be used, and has evidence of previous use as demonstrated by Moser et. al \cite{IOTpassiveRadar} is the Raspberry Pi platform, which despite having increased processing times, demonstrated its functionality. An alternate, higher powered choice in which Sednall demonstrated is the higher powered Nvidia Jetson, which includes faster processing times due to its quad core architecture \cite{FMlowCost}. The price for these options is \$60 compared to \$250 respectively. Ultimately, the choice of embedded IoT hardware for the project can be reduced to the trade off between low cost and processing power, and will be a key consideration in the project plan. Furthermore, there is possibility to design custom hardware to optimise for processing speeds and project cost, for example, a PCB extension utilising a Raspberry Pi with DSP IC chips and/or custom user buttons.
+\end{table}
+
+
+\par \vspace{0.5cm} 
+\noindent There is precedent of previous use for the Raspberry Pi platform as demonstrated by Moser et. al \cite{IOTpassiveRadar} An alternate, higher powered choice in which Sednall demonstrated is the higher powered Nvidia Jetson, which includes faster processing times due to its quad core architecture \cite{FMlowCost}. The price for these options is \$60 compared to \$250 respectively. Ultimately, the choice of embedded IoT hardware for the project can be reduced to the trade off between low cost and processing power, and will be a key consideration in the project plan. Furthermore, there is possibility to design custom hardware or utilise the GPIO functionality of the single board computer, as reflected by the high level definition of IoT architecture by ITEE \cite{IoTdefinition}.
 
 \section{Networking with Embedded Hardware}
 

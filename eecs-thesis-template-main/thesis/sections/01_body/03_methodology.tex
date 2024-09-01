@@ -43,6 +43,40 @@ The RTL-SDR was tested with a range of software as mentioned in \ref*{sec:SDRsof
 \subsection{Embedded Computing Platform \label{sec:embedded computing}}
 
 
+
+The embedded computing platform chosen for the testbed was the Raspberry Pi 5 (RPi5), specifically the version with 8GB of RAM \cite{core_electronics_rpi5}. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{nvmeRpi5.png}
+    \caption{Raspberry Pi 5 with NVME SSD \cite{pimoroni_nvme_base}}
+    \label{fig:Rpi5}
+\end{figure}
+
+As seen in Table \ref{tab:sbc_comparison}, the RPi5 has a quad-core ARM Cortex-A72 CPU, 8GB of LPDDR4-3200 SDRAM, and a 1Gbit Ethernet port. The RPi5 was chosen for its relatively low cost, small form factor, and wide range of software support. Other SBC's from Table \ref{tab:sbc_comparison} were considered, but the Rpi5 represented the best balance of performance and cost for the project, for example, the higher cost of the Nvidia Jetson was not justified for the project requirements. The viability of the Raspberry Pi5 in the context of testbed design and functionality was analysed based on the following points:
+
+\noindent \textbf{Advantages}
+\begin{itemize}
+    \item \textbf{Storage:} The RPi5 supports external storage options via microSD, along with configurable HATs (hardware attached on top) for NVME SSDs, see section \ref{sec:storage} \cite{pimoroni_nvme_base}.
+    \item \textbf{Size:} Its small form factor (85.6 x 56.5 mm) - roughly the size of a credit card, makes it easy to integrate into a testbed setup. Easily obtainable cooling fan.
+    \item \textbf{GPIO:} 40 Pin GPIO header, can be used for interfacing with a prospective testbed user. Driven by the RP1 (custom I/O controller chip) \cite{core_electronics_rpi5}, the I/O is programmable with python.
+    \item \textbf{Networking Capability:} Includes a 1Gbit Ethernet port and Wi-Fi 802.11ac, facilitating high-speed data transfer and network communication. Capable of 217.6 MB/s over Wi-Fi \cite{rpi5_wifi}.
+    \item \textbf{Processing Capability:} Equipped with a quad-core ARM Cortex-A72 CPU and 8GB of LPDDR4-3200 RAM, enabling 2.4 GHz clock \cite{core_electronics_rpi5}.
+    \item \textbf{Cost-Effectiveness:} Price of \$150 AUD, making it an affordable option for the project, approximately 1.5 the cost of the RPi4 (however almost double the performance) \cite{core_electronics_rpi5}
+    \item \textbf{Software Support:} Extensive community support and availability of a wide range of software tools and libraries, especially for Linux-based systems, e.g. RTL-SDR, GNU Radio, etc. see section \ref{sec:SDRsoftware}.
+\end{itemize}
+
+\noindent \textbf{Disadvantages} \todo{Add to this as project preogresses}
+\begin{itemize}
+    \item \textbf{Limited Built-In Storage:} The built-in storage is minimal, so additional external storage is necessary for handling large volumes of data.
+    \item \textbf{Performance Constraints:} While powerful, it may not handle very high-frequency or complex radar signal processing as efficiently as more specialized or high-performance computing platforms, custom algorithms potentially required \cite{IOTpassiveRadar}.
+    \item \textbf{Heat Management:} Under continuous heavy load, the RPi5 may require additional cooling solutions to prevent overheating.
+    \item \textbf{Limited I/O Bandwidth:} The available I/O bandwidth might be a bottleneck for applications requiring very high-speed data acquisition and processing.
+    \item \textbf{Power Supply:} Requires a stable power supply of 5.1V / 15W; not ideal for potentially portable or battery-powered applications \cite{rpi5_wifi}. 
+\end{itemize}
+
+
+
 \subsection{NVME Based Storage \label{sec:storage}}
 Following on from the selection and testing of the Raspberry Pi 5 as the testbed computing platform, it became evident that the default 32GB microSD card used to boot and run the operating system was insufficient for the storage requirements of the project. The chosen solution for the bottleneck was to utilise a NVME SSD drive, connected via PCIe to the Raspberry Pi 5, specifically the Pimoroni Base \cite{pimoroni_nvme_base}.
 
@@ -79,7 +113,36 @@ The results in Table \ref{tab:diskperf} clearly show the obtained significant pe
 
 
 \subsection{Antenna Configuration \label{sec:antenna}}
+Intially, a simple SMA whip antenna was used for the RTL-SDR, as seen in Figure \ref{fig:rtlSDR}. These low cost antennas are typically used for general purpose reception, and are not optimised for any specific frequency range. The whip antenna was used for initial testing and prototyping, and was capable of receiving a range of broadcast signals with a NOISE FLOOR X. Eventually a more specialised antenna was used, the Yagi-Uda antenna, which is a directional antenna that is commonly used for point-to-point communication. The Yagi-Uda antenna was used for the final testing and validation of the testbed. The Yagi-Uda was utilised with a CLF200 50 Ohm coaxial cable, which was connected to the RTL-SDR. 
+
+% IMAGE OF THE NOISE FLOOR COMPARISON
+
+
+The physical setup of these antennas for testing comprised of an "Over the Shoulder" geometry whereby the antenna was placed behind a building in the line of sight of the TX signal (in this case Mt Cootha). For a single channel / antenna PBR setup, this geometry works to attenuate the direct path signal, and allow for the reflection to be better received by the antenna. 
+\todo[inline]{diagram of geometry of map / antenna}
+
+\subsubsection{Antenna Signal Strength Testing}
+Before calculations or detection was performed, the signal strength of the received signal was measured. This was done by first using the RTL-SDR and the monopole SMA antenna and compared to the Yagi-Uda antenna. The received signal strength, representing the illuminator DAB signal, was measured approximately 6km away from the transmitter tower. \todo{image of maps reference} The results of the signal strength measurements are shown in Table \ref{tab:signalstrength}.
+
+\begin{table}[h!]
+    \centering
+    \caption{Noise Floor and SNR Comparison with -14.2 dB Gain (RTL-SDR)}
+    \label{tab:signalstrength}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Antenna Type} & \textbf{Noise Floor (dB)} & \textbf{Signal Strength (dB)} & \textbf{SNR (dB)} \\ \hline
+        SMA Monopole & -60 & -40.9 & 19.1 \\ \hline
+        Yagi-Uda     & -60 & -17   & 43   \\ \hline
+    \end{tabular}
+    \vspace{0.5cm}
+\end{table}
+
+The above table reflects the high gain of the Yagi-Uda antenna, which is a directional antenna, compared to the monopole SMA antenna. Overall, this testing was valuable to benchmark a noise floor and appreciate the neccessity for a high gain antenna, especially in the context of the low power target signal.
+
+
 \subsection{Testbed Design \label{sec:testbed}}
+
+
 
 
 \section{Software}
