@@ -9,7 +9,7 @@ This chapter contains the design decision and steps taken to complete the testbe
 \section{Hardware \label{sec:hardware}}
 
 \subsection{Software Defined Radio \label{sec: SDRdongle}}
-The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. \todo{ADD SECTION LABELS} As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation (CITE!!!). Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost RTL-SDR, before progressing to later prototyping on higher end MODEL X.
+The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. \todo{ADD SECTION LABELS} As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation (CITE!!!). Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost and qualirt RTL-SDR to use as a benchmark, before progressing to later prototyping on higher end LimeSDR.
 
 \vspace{0.5cm} \noindent 
 \textbf{(i) RTL-SDR Prototyping}
@@ -35,9 +35,26 @@ The RTL-SDR is based on the Realtek RTL2832U chipset, and has a frequency range 
 The RTL-SDR was tested with a range of software as mentioned in \ref*{sec:SDRsoftware} to ensure hardware was correctly functioning and to gain familiarity with the process. Specifically, given the nature of the digital signals utilised in this project, it was tested at the appropriate frequency range (approx 200Mhz). Furthemore, this was valuable to obtain ball park noise floor measurements, which eventuated to around -80dB when using the basic antenna. 
 
 \vspace{0.5cm} \noindent 
-\textbf{(ii) MODEL X Implementation}
+\textbf{(ii) LimeSDR Implementation}
+The LimeSDR was chosen as the higher end SDR module for the implementation and testing of the testbed. As seen in Table \ref{tab:SDRcomparison}, the LimeSDR has a frequency range of 100kHz to 3.8GHz, and a bandwidth of 61.44MHz. The LimeSDR is also more expensive than the RTL-SDR, with a price of around \$600 AUD. Specifically, the LimeSDR used was the LimeSDR-USB Version 1.4, which can be seen in the figure below \ref{fig:limeSDR}. 
 
-\todo[inline]{WHAT ARE THE SPECS OF SDR X}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{limeSDR.png}
+    \caption{LimeSDR-USB Version 1.4 PCB \cite{limesdr_usb}}
+    \label{fig:limeSDR}
+\end{figure}
+
+The actual SDR module was encased as seen in XXX \todo{add photo in results}, with the only relevant conenctions being a singular RX SMA port, power supply (6V DC) and a USB type B connection. The block diagram of the LimeSDR can be seen in the figure below \ref{fig:limeSDRblock}, and evidently it is a more complex system than the RTL-SDR, most notably with the CycloneIV FPGA chip, which is used for signal processing and control.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{limeSDRblock.png}
+    \caption{LimeSDR Block Diagram \cite{limesdr_usb}}
+    \label{fig:limeSDRblock}
+\end{figure}
+
+Another notable hardware feature of the LimeSDR is the LMS7002M transceiver chip which can facilitate both RX and TX capabilities, along with built in ADC/DAC (12 bit) capability \cite{limesdr_usb}. The bandwidth advantage of the LimeSDR was a key factor in its selection, as the wider bandwidth allows for more data to be captured and processed, specifically in the context of the digital broadcast signal used as the illuminator of opportunity. This bandwidth advantage directly results in increased range resolution on the range doppler maps, which is a key metric for the detection of aerial vehicles. \todo{Discuss USB 3.0 bottlneck, until X bandwidth samples/sec}
 
 
 \subsection{Embedded Computing Platform \label{sec:embedded computing}}
@@ -121,7 +138,7 @@ Intially, a simple SMA whip antenna was used for the RTL-SDR, as seen in Figure 
 The physical setup of these antennas for testing comprised of an "Over the Shoulder" geometry whereby the antenna was placed behind a building in the line of sight of the TX signal (in this case Mt Cootha). For a single channel / antenna PBR setup, this geometry works to attenuate the direct path signal, and allow for the reflection to be better received by the antenna. 
 \todo[inline]{diagram of geometry of map / antenna}
 
-\subsubsection{Antenna Signal Strength Testing}
+\subsubsection{Antenna Signal Strength Testing} \todo{Discuss what to do, put this in results}
 Before calculations or detection was performed, the signal strength of the received signal was measured. This was done by first using the RTL-SDR and the monopole SMA antenna and compared to the Yagi-Uda antenna. The received signal strength, representing the illuminator DAB signal, was measured approximately 6km away from the transmitter tower. \todo{image of maps reference} The results of the signal strength measurements are shown in Table \ref{tab:signalstrength}.
 
 \begin{table}[h!]
