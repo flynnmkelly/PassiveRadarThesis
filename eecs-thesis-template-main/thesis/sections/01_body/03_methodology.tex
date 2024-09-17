@@ -5,11 +5,11 @@ This chapter contains the design decision and steps taken to complete the testbe
 
 \section{Hardware \label{sec:hardware}}
 
-\subsection{Software Defined Radio \label{sec: SDRdongle}}
+\subsection{Software Defined Radio \label{sec: SDRdongleHardware}}
 The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. \todo{ADD SECTION LABELS} As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation \cite{SDRtheory}. Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost and qualirt RTL-SDR to use as a benchmark, before progressing to later prototyping on higher end LimeSDR.
 
 \vspace{0.5cm} \noindent 
-\textbf{(i) RTL-SDR Prototyping}
+\textbf{(i) RTL-SDR}
 The low cost RTL-SDR was chosen as the initial SDR module for testbed prototyping  due to its low cost and wide availability. The specifics of the RTL-SDR are stated in section 2.4 \todo{REF}, it was connected to the RPi5 and higher level M1 Mac along with a simple SMI antenna as seen in the figure below \ref*{fig:rtlSDR}. 
 
 \begin{figure}[htbp]
@@ -41,7 +41,7 @@ In order to test the functionality and performance of the RTL-SDR, it was necess
 \end{itemize}
 
 \vspace{0.5cm} \noindent 
-\textbf{(ii) LimeSDR Implementation}
+\textbf{(ii) LimeSDR}
 The LimeSDR was chosen as the higher end SDR module for the implementation and testing of the testbed. As seen in Table \ref{tab:SDRcomparison}, the LimeSDR has a frequency range of 100kHz to 3.8GHz, and a bandwidth of 61.44MHz. The LimeSDR is also more expensive than the RTL-SDR, with a price of around \$600 AUD. Specifically, the LimeSDR used was the LimeSDR-USB Version 1.4, which can be seen in the figure below \ref{fig:limeSDR}. 
 
 \begin{figure}[htbp]
@@ -154,8 +154,29 @@ In summary, the testbed was designed to be a portable, easily deployable system 
 \section{Software}
 
 \subsection{SDR Software \label{sec:SDRsoftware}}
-When utilising SDR modules, it is necessary to have capabilities to demodulate and then process the received signals. This is typically done using SDR software, which is a type of software that allows for the reception and baseband processing of radio signals using SDR hardware. For this project, the RTL-SDR was used in conjunction with the following software tools:
+When utilising SDR modules, it is necessary to have capabilities to perform necessary processing on the sampeld data. This is typically done using SDR 'driver' software, which is a type of software that allows for the reception and baseband processing of radio signals using SDR hardware (ie. setting the tuner to a given frequency). Both the SDR modules utilised communicated with the host computer via USB 3.0, and utilise the libusb library for this. In the case of the selected hardware for this project, it was necessary to utilise relevant driver API's to interface with the RTL-SDR and LimeSDR, both from the testbed and the higher level M1 Mac, as shown below.
 
+\vspace{0.5cm} \noindent 
+\textbf{(i) RTL-SDR} Given the widespread use of RTL-SDR dongles, there is a range of useable software stacks and drivers available. The interface software utilised for testing and visualising the RTL-SDR efficacy was GQRX, which is a software defined radio receiver powered by GNU Radio and the Qt GUI toolkit. GQRX is easy to use and provides a range of features for signal processing and analysis \cite{RTLSDRchipSet}. The software was installed on the RPi5 and the M1 Mac, and was used to receive and process the digital broadcast signal, also helping test the antenna. Whilst GQRX is used as a front end visualisation tool, it essentially wraps the \textbf{librtlsdr} library \cite{librtlsdr}, which is the actual API driver for the RTL-SDR (specifically the RTL2832U chip \cite{RTLSDRspecs}). The librtlsdr library handles hardware communication, tuning, and data acquisition (gain, sampling, etc) \cite{librtlsdr}, and consequently outputs 8-bit I/Q samples to the host computer. This library was tested on both the RPi5 and the M1 Mac, as seen in the results section.
+
+\vspace{0.5cm} \noindent 
+\textbf{(ii) LimeSDR} The LimeSDR requires a more complex software stack than the RTL-SDR, given its higher performance and comparitively better hardware. As mentioned in section \ref{sec: SDRdongleHardware} and specifically seen in the LimeSDR block diagram \ref{fig:limeSDRblock}, the LimeSDR has a custom LMS7002M transceiver chip, along with other programmable components. However, given the relatively smaller user numbers of the LimeSDR it was more difficult to interface (given lack of documentation). The following software was used to interface with the LimeSDR, the connection between these APIs can be viewed in the software block diagram below \ref{fig:limeSDRapi}:
+
+% software api block diagram
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.78\textwidth]{APIframework.png}
+    \caption{LimeSDR Software API Block Diagram}
+    \label{fig:limeSDRapi}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{LimeSuite:} LimeSuite is the software that is used to interface with the LimeSDR hardware, and is used to configure the LimeSDR, set the frequency, gain, and bandwidth, and perform other functions \cite{limesdr_usb}. 
+    \item \textbf{SoapySDR:} SoapySDR \cite{soapsdr} is a software abstraction layer that provides a common API for interfacing with a wide range of SDR hardware, including the LimeSDR. SoapySDR provides a simple and consistent API for interfacing with SDR hardware, and is used to communicate with the LimeSDR hardware from the host computer \cite{SoapySDR}. It essentially acts to wrap and unify the LimeSuite and LimeSDR hardware, providing a common interface for the host computer (ideal for porting from testbed to high level mac)
+    \item \textbf{Python:} Python was used as an abstract interface, essentially calling the SoapySDR API, again, easily transferable between host computers. 
+\end{itemize}
+
+In summary, the above software was selected to ensure portability between both the testbed and the higher level M1 Mac, whilst also accounting for potential SDR hardware changes. The individual component testing comprised of sampling DAB 9A, ensuring correct file parsing and basic noise floor readings.
 
 \subsection{Networking Requirements \label{sec:networking}}
 
