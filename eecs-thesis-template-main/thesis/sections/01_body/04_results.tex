@@ -1,11 +1,66 @@
 \chapter{Results and Discussion \label{sec:results}}
-\todo[inline]{Results: latency comparison, design cost, sucessful detection}
 
-\section{Testbed Verification}
-Discuss how the components and system were tested and verified.
+\section{Testbed Verification \label{sec:testbedResults}}
+Before the testbed was used to facilitate comparison between different SDR modules detection performance, its design and components were tested according to the steps in the methodology section. Whilst this was relatively straightforward, it was necessary to ensure the project could meet its aims of a simple, user friendly, potentially scaleable design. 
 
-\section{RTL-SDR vs LimeSDR}
+\subsection{SDR Module Verification \label{sec:sdrVerification}}
+HARDWARE AND SOFTWARE
+The RTL-SDR and LimeSDR Mini were tested to ensure they could be used in the testbed. The RTL-SDR was tested first, as it was the simpler of the two modules. The RTL-SDR was connected to the Raspberry Pi 4, and the testbed software was run. 
+% GQRX TESTING, etc
 
+\subsection{RPi5 and NVME Testing \label{sec:sbcVerification}}
+In order to compare and quantify the differences in the storage performance between the microSD card and the NVME SSD, a series of tests were conducted, utilising the following linux commands via the terminal of the RPi5.
+
+\begin{verbatim}
+    lsblk
+    sudo hdparm -t --direct /dev/nvme0n1 
+    sudo hdparm -t --direct /dev/mmcblk0
+\end{verbatim}
+PUT IN RESULTS!!!
+\noindent Resulting in the following output seen below in Table \ref{tab:diskperf}.
+
+\begin{table}[h!]
+    \centering
+    \caption{Disk Read Performance: NVMe vs MicroSD Card \label{tab:diskperf}}
+    \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Device} & \textbf{Read Performance} \\ \hline
+    \texttt{NVMe SSD (\texttt{/dev/nvme0n1})} & \texttt{751.22 MB/sec} \\ \hline
+    \texttt{MicroSD Card (\texttt{/dev/mmcblk0})} & \texttt{84.83 MB/sec} \\ \hline
+    \end{tabular}
+\end{table}
+
+The results in Table \ref{tab:diskperf} clearly show the obtained significant performance increase when using the NVME SSD compared to the microSD card. Given the large amount of data that generated and processed during the SDR sampling. 
+
+\subsection{Antenna Testing \label{sec:antennaVerification}}
+
+% IMAGE OF THE NOISE FLOOR COMPARISON
+
+Before calculations or detection was performed, the signal strength of the received signal was measured. This was done by first using the RTL-SDR and the monopole SMA antenna and compared to the Yagi-Uda antenna. The received signal strength, representing the illuminator DAB signal, was measured approximately 6km away from the transmitter tower. \todo{image of maps reference} The results of the signal strength measurements are shown in Table \ref{tab:signalstrength}.
+
+\begin{table}[h!]
+    \centering
+    \caption{Noise Floor and SNR Comparison with -14.2 dB Gain (RTL-SDR)}
+    \label{tab:signalstrength}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Antenna Type} & \textbf{Noise Floor (dB)} & \textbf{Signal Strength (dB)} & \textbf{SNR (dB)} \\ \hline
+        SMA Monopole & -60 & -40.9 & 19.1 \\ \hline
+        Yagi-Uda     & -60 & -17   & 43   \\ \hline
+    \end{tabular}
+    \vspace{0.5cm}
+\end{table}
+
+The above table reflects the high gain of the Yagi-Uda antenna, which is a directional antenna, compared to the monopole SMA antenna. Overall, this testing was valuable to benchmark a noise floor and appreciate the neccessity for a high gain antenna, especially in the context of the low power target signal.
+
+\section{GPIO and Software Excecutable Testing \label{sec:gpioTesting}}
+
+\section{Dection Edge Processing Comparison} \label{sec:edgeProcessing}
+
+
+\section{RTL-SDR vs LimeSDR Detection Comparison \label{sec:SDRcomparison}}
 
 \section{Overall Design Cost}
+
 \section{Comparison to Existing Work}
+% DISCUSS INTEGRATION INTO FLIGHT RADAR 24, etc

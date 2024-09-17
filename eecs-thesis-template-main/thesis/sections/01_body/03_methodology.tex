@@ -1,7 +1,4 @@
 \chapter{Methodology and Design \label{sec:methodology}}
-\todo[inline]{Implementation: how was your experiment/project accomplished? 
-Include enough details of your method and tooling that someone can easily replicate your results.
-}
 
 % PRELUDE
 This chapter contains the design decision and steps taken to complete the testbed creation and testing. The project can broken into the three main areas of hardware, software and digital signal processing. 
@@ -9,7 +6,7 @@ This chapter contains the design decision and steps taken to complete the testbe
 \section{Hardware \label{sec:hardware}}
 
 \subsection{Software Defined Radio \label{sec: SDRdongle}}
-The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. \todo{ADD SECTION LABELS} As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation (CITE!!!). Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost and qualirt RTL-SDR to use as a benchmark, before progressing to later prototyping on higher end LimeSDR.
+The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. \todo{ADD SECTION LABELS} As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation \cite{SDRtheory}. Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost and qualirt RTL-SDR to use as a benchmark, before progressing to later prototyping on higher end LimeSDR.
 
 \vspace{0.5cm} \noindent 
 \textbf{(i) RTL-SDR Prototyping}
@@ -32,7 +29,16 @@ The RTL-SDR is based on the Realtek RTL2832U chipset, and has a frequency range 
 \end{figure}
 
 \par \noindent
-The RTL-SDR was tested with a range of software as mentioned in \ref*{sec:SDRsoftware} to ensure hardware was correctly functioning and to gain familiarity with the process. Specifically, given the nature of the digital signals utilised in this project, it was tested at the appropriate frequency range (approx 200Mhz). Furthemore, this was valuable to obtain ball park noise floor measurements, which eventuated to around -80dB when using the basic antenna. 
+% NEEDS SPECIFIC TESTING STEPS
+% The RTL-SDR was tested with a range of software as mentioned in \ref*{sec:SDRsoftware} to ensure hardware was correctly functioning and to gain familiarity with the process. Specifically, given the nature of the digital signals utilised in this project, it was tested at the appropriate frequency range (approx 200Mhz). Furthemore, this was valuable to obtain ball park noise floor measurements, which eventuated to around -80dB when using the basic antenna. 
+In order to test the functionality and performance of the RTL-SDR, it was necessary to perform the following steps in isolation before integrating into the testbeed, which are reflected in the results section:
+% Testing steps
+\begin{itemize}
+    \item \textbf{Software Installation:} Install the RTL-SDR drivers and software on the relevant host computers (RPi5 and M1 Mac).
+    \item \textbf{Signal Reception:} Tune the RTL-SDR to the appropriate frequency range (approx 200MHz) and receive a digital broadcast signal (with yagi-uda antenna or simple SMA monopole).
+    \item \textbf{Signal Processing:} Process the received signal values using python to ensure the values are not junk.
+    \item \textbf{Noise Floor Measurement:} Measure the noise floor of the received signal to account for the signal-to-noise ratio (SNR) of the system (given test location).
+\end{itemize}
 
 \vspace{0.5cm} \noindent 
 \textbf{(ii) LimeSDR Implementation}
@@ -40,12 +46,20 @@ The LimeSDR was chosen as the higher end SDR module for the implementation and t
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{limeSDR.png}
+    \includegraphics[width=0.3\textwidth]{limeSDR.png}
     \caption{LimeSDR-USB Version 1.4 PCB \cite{limesdr_usb}}
     \label{fig:limeSDR}
 \end{figure}
 
 The actual SDR module was encased as seen in XXX \todo{add photo in results}, with the only relevant conenctions being a singular RX SMA port, power supply (6V DC) and a USB type B connection. The block diagram of the LimeSDR can be seen in the figure below \ref{fig:limeSDRblock}, and evidently it is a more complex system than the RTL-SDR, most notably with the CycloneIV FPGA chip, which is used for signal processing and control.
+
+In order to validate the standalone functionality of the LimeSDR, the following steps were taken, and discussed in the results section:
+\begin{itemize}
+    \item \textbf{Software Installation:} Install the LimeSDR drivers and software, the software required is in section \ref{sec:SDRsoftware}.
+    \item \textbf{Signal Reception:} Tune the LimeSDR to the appropriate frequency range (approx 200MHz) and receive a digital broadcast signal (with yagi-uda antenna).
+    \item \textbf{Signal Processing:} Process the received signal values using python to ensure the values are not junk.
+    \item \textbf{Noise Floor Measurement:} Measure the noise floor for given location.
+\end{itemize}
 
 \begin{figure}[htbp]
     \centering
@@ -58,7 +72,6 @@ Another notable hardware feature of the LimeSDR is the LMS7002M transceiver chip
 
 
 \subsection{Embedded Computing Platform \label{sec:embedded computing}}
-
 
 
 The embedded computing platform chosen for the testbed was the Raspberry Pi 5 (RPi5), specifically the version with 8GB of RAM \cite{core_electronics_rpi5}. 
@@ -95,66 +108,31 @@ As seen in Table \ref{tab:sbc_comparison}, the RPi5 has a quad-core ARM Cortex-A
 
 
 \subsection{NVME Based Storage \label{sec:storage}}
-Following on from the selection and testing of the Raspberry Pi 5 as the testbed computing platform, it became evident that the default 32GB microSD card used to boot and run the operating system was insufficient for the storage requirements of the project. The chosen solution for the bottleneck was to utilise a NVME SSD drive, connected via PCIe to the Raspberry Pi 5, specifically the Pimoroni Base \cite{pimoroni_nvme_base}.
-
-In order to compare and quantify the differences in the storage performance between the microSD card and the NVME SSD, a series of tests were conducted, utilising the following linux commands via the terminal of the RPi5.
-
-\begin{verbatim}
-    lsblk
-    sudo hdparm -t --direct /dev/nvme0n1 
-    sudo hdparm -t --direct /dev/mmcblk0
-\end{verbatim}
-
-\noindent Resulting in the following output seen below in Table \ref{tab:diskperf}.
-
-\begin{table}[h!]
-    \centering
-    \caption{Disk Read Performance: NVMe vs MicroSD Card \label{tab:diskperf}}
-    \begin{tabular}{|l|l|}
-    \hline
-    \textbf{Device} & \textbf{Read Performance} \\ \hline
-    \texttt{NVMe SSD (\texttt{/dev/nvme0n1})} & \texttt{751.22 MB/sec} \\ \hline
-    \texttt{MicroSD Card (\texttt{/dev/mmcblk0})} & \texttt{84.83 MB/sec} \\ \hline
-    \end{tabular}
-\end{table}
-
-The results in Table \ref{tab:diskperf} clearly show the obtained significant performance increase when using the NVME SSD compared to the microSD card. Given the large amount of data that generated and processed during the SDR sampling. Further NVME SSD configuration details include: 
-
+Following on from the selection and testing of the Raspberry Pi 5 as the testbed computing platform, it became evident that the default 32GB microSD card used to boot and run the operating system was insufficient for the storage requirements of the project. The chosen solution for the bottleneck was to utilise a NVME SSD drive, connected via PCIe to the Raspberry Pi 5, specifically the Pimoroni Base \cite{pimoroni_nvme_base}. It was necessary to test the efficacy of the NVME SSD in the context of the testbed, with the following steps take and discussed in the results section:
+% Steps for testing the NVME SSD
 \begin{itemize}
-    \item \textbf{File System:} The NVME SSD was formatted with the ext4 file system, which is the default file system for most Linux distributions. 
-    \item \textbf{Mounting:} The NVME SSD was mounted to the RPi5 at the following location: \texttt{/mnt/nvme0n1}
-    \item \textbf{Connector}: PCIe x4 interface Gen 2.0, which is a high-speed interface standard that is commonly used for connecting storage devices to a computer.
-    \item \textbf{Supported NVMe Drives}: Supports M.2 NVMe drives (2280 size)
-    \item \textbf{SSD Model:} Patriot P300 NVMe M.2 SSD, 128GB capacity, used for both storage and booting the RPi5.
+    \item \textbf{Hardware Installation:} Screw the NVME SSD drive into the Pimoroni Base, and connect the Base to the Raspberry Pi 5 via the PCIe connector.
+    \item \textbf{Software Configuration:} Format the NVME SSD drive with operating system.
+    \item \textbf{Performance Testing:} Test the read and write performance of the NVME SSD drive using the \texttt{hdparm} utility.
 \end{itemize}
+
+Further NVME SSD configuration details include formatting with the ext4 file system, which is the default for most Linux distributions. It was mounted to the Raspberry Pi 5 (RPi5) at the location /mnt/nvme0n1. The SSD connects via a PCIe x4 interface Gen 2.0, a high-speed standard commonly used for storage devices. It supports M.2 NVMe drives of the 2280 size. The specific model used is the Patriot P300 NVMe M.2 SSD with a 128GB capacity, serving both as storage and for booting the RPi5.
 
 
 \subsection{Antenna Configuration \label{sec:antenna}}
 Intially, a simple SMA whip antenna was used for the RTL-SDR, as seen in Figure \ref{fig:rtlSDR}. These low cost antennas are typically used for general purpose reception, and are not optimised for any specific frequency range. The whip antenna was used for initial testing and prototyping, and was capable of receiving a range of broadcast signals with a NOISE FLOOR X. Eventually a more specialised antenna was used, the Yagi-Uda antenna, which is a directional antenna that is commonly used for point-to-point communication. The Yagi-Uda antenna was used for the final testing and validation of the testbed. The Yagi-Uda was utilised with a CLF200 50 Ohm coaxial cable, which was connected to the RTL-SDR. 
 
-% IMAGE OF THE NOISE FLOOR COMPARISON
-
 
 The physical setup of these antennas for testing comprised of an "Over the Shoulder" geometry whereby the antenna was placed behind a building in the line of sight of the TX signal (in this case Mt Cootha). For a single channel / antenna PBR setup, this geometry works to attenuate the direct path signal, and allow for the reflection to be better received by the antenna. 
 \todo[inline]{diagram of geometry of map / antenna}
 
-\subsubsection{Antenna Signal Strength Testing} \todo{Discuss what to do, put this in results}
-Before calculations or detection was performed, the signal strength of the received signal was measured. This was done by first using the RTL-SDR and the monopole SMA antenna and compared to the Yagi-Uda antenna. The received signal strength, representing the illuminator DAB signal, was measured approximately 6km away from the transmitter tower. \todo{image of maps reference} The results of the signal strength measurements are shown in Table \ref{tab:signalstrength}.
-
-\begin{table}[h!]
-    \centering
-    \caption{Noise Floor and SNR Comparison with -14.2 dB Gain (RTL-SDR)}
-    \label{tab:signalstrength}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-        \textbf{Antenna Type} & \textbf{Noise Floor (dB)} & \textbf{Signal Strength (dB)} & \textbf{SNR (dB)} \\ \hline
-        SMA Monopole & -60 & -40.9 & 19.1 \\ \hline
-        Yagi-Uda     & -60 & -17   & 43   \\ \hline
-    \end{tabular}
-    \vspace{0.5cm}
-\end{table}
-
-The above table reflects the high gain of the Yagi-Uda antenna, which is a directional antenna, compared to the monopole SMA antenna. Overall, this testing was valuable to benchmark a noise floor and appreciate the neccessity for a high gain antenna, especially in the context of the low power target signal.
+\subsubsection{Antenna Verification and Testing Requirements}
+It was necessary to have a range of hardware verification tests to ensure the antenna was functioning correctly and to quantify the signal strength of the illuminator signal. The following steps were taken to test the signal strength of the illuminator signal, and are discussed in the results section:
+\begin{itemize}
+    \item \textbf{Signal Strength Measurement:} Measure the signal strength of the illuminator signal using the RTL-SDR and the SMA whip antenna.
+    \item \textbf{Signal Strength Comparison:} Compare the signal strength of the illuminator signal using the RTL-SDR and the Yagi-Uda antenna.
+    \item \textbf{Compare a Range of Test Locations:} Given the geography of Mt Cootha and the Brisbane air traffic fligh path (INSERT RELEVANT GEOGRAPHY MAP), it was necessary to test the signal strength at a range of locations to ensure the illuminator signal was being received, and compare any contributable noise factors.
+\end{itemize}
 
 
 \subsection{Testbed Design \label{sec:testbed}}
@@ -164,7 +142,7 @@ Building off the aforementioned hardware components, it was then necessary to de
 
 \begin{itemize}
     \item \textbf{Enclosure:} A custom 3D printed enclosure was designed to house the RPi5, the RTL-SDR, and the NVME SSD HAT seen in \ref{fig:Rpi5}. The enclosure was designed to be compact and portable, with a small form factor that could be easily transported and deployed in various environments. The enclosure was designed to be easily opened and closed, with a removable top panel that allowed for easy access to the internal components. The printed acrylic was also designed for cooling purposes, with ventilation holes on the top and sides of the enclosure to allow for airflow, bolstered by the Rpi5 active cooling fan and heatsink.
-    \item \textbf{User Interface:} It was envisaged that the testbed have some sort of capability that would enable physical triggering of PBR sampling and processing \todo{REMOTE??}. Arcade style pushbuttons with LED's were selected to facilitate this interface \cite{pushbuttons}. The pushbuttons were connected to the GPIO pins of the RPi5, and were programmed to trigger the PBR sampling and processing functions (implemented via python scripts). The LED's were used to indicate the status of the PBR system, with different colours indicating different states of the system.
+    \item \textbf{User Interface:} It was envisaged that the testbed have some sort of capability that would enable physical triggering of PBR sampling and processing \todo{REMOTE??}. Arcade style pushbuttons with LED's were selected to facilitate this interface \cite{pushbuttons}. The pushbuttons were connected to the GPIO pins of the RPi5, and were programmed to trigger the PBR sampling and processing functions (implemented via python scripts). The LED's were used to indicate the status of the PBR system, with different colours indicating different states of the system. The details of testing and implementation of the user interface are discussed in the results.
     \item \textbf{Power Supply:} A 5V / 15W power supply was used to power the RPi5, with a USB-C connector that allowed for easy connection to the RPi5. The power supply was connected to a power strip that allowed for multiple enclosures to be powered from a single power source.
     \item \textbf{Networking:} The ethernet port on the Rpi5 was left unobstructed by the case for potential wired networking. With the main focus of being geared towards Wi-Fi based networking which was all facilitated by the Rpi5 system on chip.\todo{network details}
     \item \textbf{Radio Front End:} It was intended for the SDR module to be connected via the USB 3.0 port with the enclosure not designed to house the SDR unit (for versatility). Per SDR functionality, the antenna was connected via coaxial cable, also not housed in the enclosure. 
@@ -182,8 +160,18 @@ When utilising SDR modules, it is necessary to have capabilities to demodulate a
 \subsection{Networking Requirements \label{sec:networking}}
 
 
-% METHOD FOR TESTING NOT THE ACTUAL RESULTS
-\section{Digital Signal Processing Testing \& Simulation}
+% METHOD FOR TESTING Comparison
+ NOT THE ACTUAL RESULTS
+\section{Relevant Digital Signal Processing}
+
+Once the first phase of the testbed verification was completed, the next step was to implement the digital signal processing (DSP) algorithms that would be used to process the received signals and detect the presence of aerial vehicles, and then compare the results between the RTL-SDR and the LimeSDR. Whilst both SDR implementations used the same fundamental DSP algorithms (FFT and autocorrelate), there were some system factors that were impacted by the comparison. 
+
+\subsection{Sampling Rate and Bandwidth}
+Discuss the theoretical difference in our study
+
+\subsection{Method for Testing and Comparing LimeSDR and RTL-SDR}
+Both SDRs were connected to the RPi5 testbed and were used to receive the same digital broadcast signal. The received signals were then processed using the same DSP algorithms, and the results were compared. The following steps were taken to test and compare the LimeSDR and RTL-SDR:
+
 
 
 

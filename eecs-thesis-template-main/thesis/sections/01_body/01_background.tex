@@ -87,11 +87,8 @@ Illuminator signals are not limited to terrestrial signals, and can also include
 \par \vspace{0.5cm} 
 \noindent Typical characteristics of Australian DAB+ signals include frequency of just over 200MHz, bandwidth of approximately 1.5MHz, and a minimal output power of 10kW effective radiated power (ERP), consequently covering a large area \cite{DABfeatures}. These digital signals employ a modulation scheme called COFDM (coded orthogonal frequency division multiplexing), which is a form of multi-carrier modulation that is robust against multipath interference \cite{INTRO2017}. COFDM works by dividing the signal into multiple, simultaneous streams which are orthogonal to each other, modulated at a different frequency, maximising robust signal propogation. This is particularly useful in the context of passive radar, as it allows for the target and reference signal to be received by the passive radar system even if it has been reflected off multiple surfaces, such as buildings or trees. More specifically, the Australian implementation of DAB+ is dictated by the ETSI standard EN 300 401, which specifies the modulation, coding and multiplexing of the signal \cite{etsi_DAB_standard}. DAB+ is encoded via the AAC+, with proper licensing required, the most commonly utilised forward error correction(FEC) is 3A \cite{DABaustralia}. At a high level, these protocols of DAB+ reflect a channel model which has encoding, modulation and noise handling (FEC) built in, which can be advantageous for passive radar systems.
 
-\todo[inline]{FM / other signals: why / why not? ALSO TALK ABOUT THE DAB STANDARD SPECIFICALLY}
-
 \par \vspace{0.5cm} 
-\noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}.
-
+\noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}. The above being said, every reason that DAB is appropriate for passive radar also extends to other digital illuminators of opportunity, such as DVB-T, which is also a COFDM signal, and has a higher bandwidth and power than DAB.
 
 
 
