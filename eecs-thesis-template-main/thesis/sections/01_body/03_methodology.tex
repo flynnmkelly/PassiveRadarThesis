@@ -122,7 +122,6 @@ Further NVME SSD configuration details include formatting with the ext4 file sys
 \subsection{Antenna Configuration \label{sec:antenna}}
 Intially, a simple SMA whip antenna was used for the RTL-SDR, as seen in Figure \ref{fig:rtlSDR}. These low cost antennas are typically used for general purpose reception, and are not optimised for any specific frequency range. The whip antenna was used for initial testing and prototyping, and was capable of receiving a range of broadcast signals with a NOISE FLOOR X. Eventually a more specialised antenna was used, the Yagi-Uda antenna, which is a directional antenna that is commonly used for point-to-point communication. The Yagi-Uda antenna was used for the final testing and validation of the testbed. The Yagi-Uda was utilised with a CLF200 50 Ohm coaxial cable, which was connected to the RTL-SDR. 
 
-
 The physical setup of these antennas for testing comprised of an "Over the Shoulder" geometry whereby the antenna was placed behind a building in the line of sight of the TX signal (in this case Mt Cootha). For a single channel / antenna PBR setup, this geometry works to attenuate the direct path signal, and allow for the reflection to be better received by the antenna. 
 \todo[inline]{diagram of geometry of map / antenna}
 
@@ -185,10 +184,10 @@ In summary, the above software was selected to ensure portability between both t
  NOT THE ACTUAL RESULTS
 \section{Relevant Digital Signal Processing}
 
-Once the first phase of the testbed verification was completed, the next step was to implement the digital signal processing (DSP) algorithms that would be used to process the received signals and detect the presence of aerial vehicles, and then compare the results between the RTL-SDR and the LimeSDR. Whilst both SDR implementations used the same fundamental DSP algorithms (FFT and autocorrelate), there were some system factors that were impacted by the comparison. 
+Once the first phase of the testbed verification was completed, the next step was to implement the digital signal processing (DSP) algorithms that would be used to process the received signals and detect the presence of aerial vehicles, and then compare the results between the RTL-SDR and the LimeSDR, along with edge compute times (on the Rpi5) and higher level mac processing. Whilst both SDR implementations used the same fundamental DSP algorithms (FFT and autocorrelate), there were some system factors that were impacted by the comparison. 
 
 \subsection{Sampling Rate and Bandwidth}
-Discuss the theoretical difference in our study
+Fundamentally, the LimeSDR supports much higher sampling rates and bandwidths than the RTL-SDR, with the LimeSDR having a maximum sampling rate of 61.44MHz and a bandwidth of 61.44MHz, compared to the RTL-SDR which has a maximum sampling rate of 3.2MHz and a bandwidth of 3.2MHz. This difference in sampling rate and bandwidth has a direct impact on the range resolution of the radar system, with the LimeSDR being able to achieve much higher range resolution than the RTL-SDR. The sampling rate and bandwidth of the SDR modules were tested and compared, with the results discussed in the results section.
 
 \subsection{Method for Testing and Comparing LimeSDR and RTL-SDR}
 Both SDRs were connected to the RPi5 testbed and were used to receive the same digital broadcast signal. The received signals were then processed using the same DSP algorithms, and the results were compared. The following steps were taken to test and compare the LimeSDR and RTL-SDR:

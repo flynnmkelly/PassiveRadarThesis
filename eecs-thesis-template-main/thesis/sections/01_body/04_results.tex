@@ -60,7 +60,24 @@ Which worked to first detect the LimeSDR and then run a series of tests to ensur
     serial = 00090706024F3821
 \end{verbatim}
 
-\noindent A python script was then created which utilised the SoapySDR API to sample and save data to a .bin file. The script is viewable in the Appendix \ref{app:limeSDRscript}, this was based on similar code sourced from DeepWave Digital for an Air-T SDR \cite{complexSamplingPython}. It was verified by saving a .bin file and then plotting the PSD of the sample, showing the DAB multiplex centered around 202.928 MHz. Notably, given the LimeSDR has a 12 bit ADC, the output complex IQ data is 32 bits total, with a 16 bit real and 16 bit imaginary component (12 bits zero padded). This resulted in the saved .bin file being 8.2MB for 1 second of data, again showing the high storage requirements for the testbed.
+Further information about the LimeSDR and its channels was obtained using the following command:
+\begin{verbatim}
+    SoapySDRUtil --probe="driver=lime"
+\end{verbatim}
+
+\noindent The output of the above command can be viewed in the appendix \ref{lst: soapyProbe} and its information was used to configure the LimeSDR for sampling in the python script.
+
+\noindent A python script was then created which utilised the SoapySDR API to sample and save data to a .bin file. The script is viewable in the Appendix \ref{app:limeSDRscript}, this was based on similar code sourced from DeepWave Digital for an Air-T SDR \cite{complexSamplingPython}. Noteably, as seen in the SoapySDR probe information \ref{lst:soapyProbe}, there was no automatic gain control for the LimeSDR RX1, therefore the low noise amplifier (LNA) gain was set to 30dB. The script was verified by saving a .bin file and then plotting the PSD of the sample, showing the DAB multiplex centered around 202.928 MHz, as seen below. 
+
+% Image of the PSD of the LimeSDR
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{LimeSDRpsd.png}
+    \caption{LimeSDR PSD Plot (DAB Multiplex 9A)}
+    \label{fig:limeSDRpsd}
+\end{figure}
+
+Notably, given the LimeSDR has a 12 bit ADC, the output complex IQ data is 32 bits total, with a 16 bit real and 16 bit imaginary component (12 bits zero padded at LSB). The output settings of the LimeSDR are configured via the \textit{SOAPYSDRCS16} format. This resulted in the saved .bin file being 8.2MB for 1 second of data, again showing the high storage requirements for the testbed.
 
 \subsection{RPi5 and NVME Testing \label{sec:sbcVerification}}
 In order to compare and quantify the differences in the storage performance between the microSD card and the NVME SSD, a series of tests were conducted, utilising the following linux commands via the terminal of the RPi5.
@@ -70,7 +87,7 @@ In order to compare and quantify the differences in the storage performance betw
     sudo hdparm -t --direct /dev/nvme0n1 
     sudo hdparm -t --direct /dev/mmcblk0
 \end{verbatim}
-PUT IN RESULTS!!!
+
 \noindent Resulting in the following output seen below in Table \ref{tab:diskperf}.
 
 \begin{table}[h!]
@@ -107,9 +124,22 @@ Before calculations or detection was performed, the signal strength of the recei
 
 The above table reflects the high gain of the Yagi-Uda antenna, which is a directional antenna, compared to the monopole SMA antenna. Overall, this testing was valuable to benchmark a noise floor and appreciate the neccessity for a high gain antenna, especially in the context of the low power target signal.
 
-\section{GPIO and Software Excecutable Testing \label{sec:gpioTesting}}
+\subsection{GPIO and Software Excecutable Testing \label{sec:gpioTesting}}
 
-\section{Dection Edge Processing Comparison} \label{sec:edgeProcessing}
+The GPIO buttons and LED's were tested using a simple python script, which was executed on the RPi5. The script was able to detect the button press and light the LED, as expected. This was a simple test, but was important to ensure the user interface was functioning correctly.   This was implemented via the gpiod library, which was installed on the RPi5. Specifically, the script utilised the gpiochip4 which is the GPIO chip on the RPi5. 
+
+\par \vspace{0.5cm}
+\noindent
+Once basic arcade button functionality had been established, using the \textit{subprocess} library, the python script was tested executing the RTL-SDR sampling script as below:
+
+\begin{verbatim}
+    rtl_sdr_process = subprocess.Popen(['rtl_sdr', '-s', '2048000', '-f', 
+    '202.928e6', '-n', '2048000', 'testData.bin'])
+\end{verbatim}
+
+\noindent This was tested with the lime SDR
+
+\subsection{Detection Edge Processing Comparison} \label{sec:edgeProcessing}
 
 
 \section{RTL-SDR vs LimeSDR Detection Comparison \label{sec:SDRcomparison}}

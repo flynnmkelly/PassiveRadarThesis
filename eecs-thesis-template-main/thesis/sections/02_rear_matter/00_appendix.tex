@@ -5,6 +5,297 @@
 
 The below sections detail the initial setup and testing of the Raspberry Pi 5 and different SDR hardware modules.
 
+\section{SoapySDRUtil LimeSDR Probe Output}
+\begin{lstlisting}[language=bash, caption={SoapySDRUtil Probe Output for LimeSDR}, label={lst: soapyProbe}]
+
+[INFO] Make connection: 'LimeSDR-USB [USB 3.0] 90706024F3821'
+libusb: warning [darwin_transfer_status] transfer error: timed out
+[INFO] Reference clock 30.72 MHz
+[INFO] Device name: LimeSDR-USB
+[INFO] Reference: 30.72 MHz
+[INFO] LMS7002M register cache: Disabled
+
+----------------------------------------------------
+-- Device identification
+----------------------------------------------------
+  driver=FX3
+  hardware=LimeSDR-USB
+  boardSerialNumber=0x90706024f3821
+  firmwareVersion=4
+  gatewareVersion=2.23
+  hardwareVersion=4
+  protocolVersion=1
+
+----------------------------------------------------
+-- Peripheral summary
+----------------------------------------------------
+  Channels: 2 Rx, 2 Tx
+  Timestamps: YES
+  Clock sources: internal, external
+  Sensors: clock_locked, lms7_temp
+     * clock_locked (Clock Locked): true
+        CGEN clock is locked, good VCO selection.
+     * lms7_temp (LMS7 Temperature): 41.495247 C
+        The temperature of the LMS7002M in degrees C.
+  Registers: BBIC, RFIC0
+  Other Settings:
+     * SAVE_CONFIG - Save LMS settings to file
+       [key=SAVE_CONFIG, type=string]
+     * LOAD_CONFIG - Load LMS settings from file
+       [key=LOAD_CONFIG, type=string]
+     * OVERSAMPLING - oversampling ratio (0 - auto)
+       [key=OVERSAMPLING, type=int, options=(0, 1, 2, 4, 8, 16, 32)]
+  GPIOs: MAIN
+
+----------------------------------------------------
+-- RX Channel 0
+----------------------------------------------------
+  Full-duplex: YES
+  Supports AGC: NO
+  Stream formats: CF32, CS12, CS16
+  Native format: CS16 [full-scale=32767]
+  Stream args:
+     * Buffer Length - The buffer transfer size over the link.
+       [key=bufferLength, units=samples, default=0, type=int]
+     * Latency - Latency vs. performance
+       [key=latency, default=0.5, type=float]
+     * Link Format - The format of the samples over the link.
+       [key=linkFormat, default=CS16, type=string, options=(CS16, CS12)]
+     * Skip Calibration - Skip automatic activation calibration.
+       [key=skipCal, default=false, type=bool]
+     * align phase - Attempt to align phase of Rx channels.
+       [key=alignPhase, default=false, type=bool]
+  Antennas: NONE, LNAH, LNAL, LNAW, LB1, LB2
+  Corrections: DC removal, DC offset, IQ balance
+  Full gain range: [-12, 61] dB
+    TIA gain range: [0, 12] dB
+    LNA gain range: [0, 30] dB
+    PGA gain range: [-12, 19] dB
+  Full freq range: [0, 3800] MHz
+    RF freq range: [30, 3800] MHz
+    BB freq range: [-10, 10] MHz
+  Tune args:
+     * LO Offset - Tune the LO with an offset and compensate with the baseband CORDIC.
+       [key=OFFSET, units=Hz, default=0.0, type=float, range=[-1e+07, 1e+07]]
+     * BB - Specify a specific value for this component or IGNORE to skip tuning it.
+       [key=BB, units=Hz, default=DEFAULT, type=float, range=[-1e+07, 1e+07], options=(DEFAULT, IGNORE)]
+  Sample rates: [0.1, 61.44] MSps
+  Filter bandwidths: [1.4001, 130] MHz
+  Sensors: lo_locked
+     * lo_locked (LO Locked): false
+        LO synthesizer is locked, good VCO selection.
+  Other Settings:
+     * TSP_CONST - Digital DC test signal level in LMS7002M TSP chain.
+       [key=TSP_CONST, default=16383, type=int, range=[0, 32767]]
+     * CALIBRATE -  DC/IQ calibration bandwidth
+       [key=CALIBRATE, type=float, range=[2.5e+06, 1.2e+08]]
+     * ENABLE_GFIR_LPF - LPF bandwidth (must be set after sample rate)
+       [key=ENABLE_GFIR_LPF, type=float]
+     * TSG_NCO - Enable NCO test signal
+       [key=TSG_NCO, default=4, type=int, options=(-1, 4, 8)]
+
+----------------------------------------------------
+-- RX Channel 1
+----------------------------------------------------
+  Full-duplex: YES
+  Supports AGC: NO
+  Stream formats: CF32, CS12, CS16
+  Native format: CS16 [full-scale=32767]
+  Stream args:
+     * Buffer Length - The buffer transfer size over the link.
+       [key=bufferLength, units=samples, default=0, type=int]
+     * Latency - Latency vs. performance
+       [key=latency, default=0.5, type=float]
+     * Link Format - The format of the samples over the link.
+       [key=linkFormat, default=CS16, type=string, options=(CS16, CS12)]
+     * Skip Calibration - Skip automatic activation calibration.
+       [key=skipCal, default=false, type=bool]
+     * align phase - Attempt to align phase of Rx channels.
+       [key=alignPhase, default=false, type=bool]
+  Antennas: NONE, LNAH, LNAL, LNAW, LB1, LB2
+  Corrections: DC removal, DC offset, IQ balance
+  Full gain range: [-12, 61] dB
+    TIA gain range: [0, 12] dB
+    LNA gain range: [0, 30] dB
+    PGA gain range: [-12, 19] dB
+  Full freq range: [0, 3800] MHz
+    RF freq range: [30, 3800] MHz
+    BB freq range: [-10, 10] MHz
+  Tune args:
+     * LO Offset - Tune the LO with an offset and compensate with the baseband CORDIC.
+       [key=OFFSET, units=Hz, default=0.0, type=float, range=[-1e+07, 1e+07]]
+     * BB - Specify a specific value for this component or IGNORE to skip tuning it.
+       [key=BB, units=Hz, default=DEFAULT, type=float, range=[-1e+07, 1e+07], options=(DEFAULT, IGNORE)]
+  Sample rates: [0.1, 61.44] MSps
+  Filter bandwidths: [1.4001, 130] MHz
+  Sensors: lo_locked
+     * lo_locked (LO Locked): false
+        LO synthesizer is locked, good VCO selection.
+  Other Settings:
+     * TSP_CONST - Digital DC test signal level in LMS7002M TSP chain.
+       [key=TSP_CONST, default=16383, type=int, range=[0, 32767]]
+     * CALIBRATE -  DC/IQ calibration bandwidth
+       [key=CALIBRATE, type=float, range=[2.5e+06, 1.2e+08]]
+     * ENABLE_GFIR_LPF - LPF bandwidth (must be set after sample rate)
+       [key=ENABLE_GFIR_LPF, type=float]
+     * TSG_NCO - Enable NCO test signal
+       [key=TSG_NCO, default=4, type=int, options=(-1, 4, 8)]
+
+----------------------------------------------------
+-- TX Channel 0
+----------------------------------------------------
+  Full-duplex: YES
+  Supports AGC: NO
+  Stream formats: CF32, CS12, CS16
+  Native format: CS16 [full-scale=32767]
+  Stream args:
+     * Buffer Length - The buffer transfer size over the link.
+       [key=bufferLength, units=samples, default=0, type=int]
+     * Latency - Latency vs. performance
+       [key=latency, default=0.5, type=float]
+     * Link Format - The format of the samples over the link.
+       [key=linkFormat, default=CS16, type=string, options=(CS16, CS12)]
+     * Skip Calibration - Skip automatic activation calibration.
+       [key=skipCal, default=false, type=bool]
+     * align phase - Attempt to align phase of Rx channels.
+       [key=alignPhase, default=false, type=bool]
+  Antennas: NONE, BAND1, BAND2
+  Corrections: DC offset, IQ balance
+  Full gain range: [-12, 64] dB
+    PAD gain range: [0, 52] dB
+    IAMP gain range: [-12, 12] dB
+  Full freq range: [0, 3800] MHz
+    RF freq range: [30, 3800] MHz
+    BB freq range: [-10, 10] MHz
+  Tune args:
+     * LO Offset - Tune the LO with an offset and compensate with the baseband CORDIC.
+       [key=OFFSET, units=Hz, default=0.0, type=float, range=[-1e+07, 1e+07]]
+     * BB - Specify a specific value for this component or IGNORE to skip tuning it.
+       [key=BB, units=Hz, default=DEFAULT, type=float, range=[-1e+07, 1e+07], options=(DEFAULT, IGNORE)]
+  Sample rates: [0.1, 61.44] MSps
+  Filter bandwidths: [5, 40], [50, 130] MHz
+  Sensors: lo_locked
+     * lo_locked (LO Locked): true
+        LO synthesizer is locked, good VCO selection.
+  Other Settings:
+     * TSP_CONST - Digital DC test signal level in LMS7002M TSP chain.
+       [key=TSP_CONST, default=16383, type=int, range=[0, 32767]]
+     * CALIBRATE -  DC/IQ calibration bandwidth
+       [key=CALIBRATE, type=float, range=[2.5e+06, 1.2e+08]]
+     * ENABLE_GFIR_LPF - LPF bandwidth (must be set after sample rate)
+       [key=ENABLE_GFIR_LPF, type=float]
+     * TSG_NCO - Enable NCO test signal
+       [key=TSG_NCO, default=4, type=int, options=(-1, 4, 8)]
+
+----------------------------------------------------
+-- TX Channel 1
+----------------------------------------------------
+  Full-duplex: YES
+  Supports AGC: NO
+  Stream formats: CF32, CS12, CS16
+  Native format: CS16 [full-scale=32767]
+  Stream args:
+     * Buffer Length - The buffer transfer size over the link.
+       [key=bufferLength, units=samples, default=0, type=int]
+     * Latency - Latency vs. performance
+       [key=latency, default=0.5, type=float]
+     * Link Format - The format of the samples over the link.
+       [key=linkFormat, default=CS16, type=string, options=(CS16, CS12)]
+     * Skip Calibration - Skip automatic activation calibration.
+       [key=skipCal, default=false, type=bool]
+     * align phase - Attempt to align phase of Rx channels.
+       [key=alignPhase, default=false, type=bool]
+  Antennas: NONE, BAND1, BAND2
+  Corrections: DC offset, IQ balance
+  Full gain range: [-12, 64] dB
+    PAD gain range: [0, 52] dB
+    IAMP gain range: [-12, 12] dB
+  Full freq range: [0, 3800] MHz
+    RF freq range: [30, 3800] MHz
+    BB freq range: [-10, 10] MHz
+  Tune args:
+     * LO Offset - Tune the LO with an offset and compensate with the baseband CORDIC.
+       [key=OFFSET, units=Hz, default=0.0, type=float, range=[-1e+07, 1e+07]]
+     * BB - Specify a specific value for this component or IGNORE to skip tuning it.
+       [key=BB, units=Hz, default=DEFAULT, type=float, range=[-1e+07, 1e+07], options=(DEFAULT, IGNORE)]
+  Sample rates: [0.1, 61.44] MSps
+  Filter bandwidths: [5, 40], [50, 130] MHz
+  Sensors: lo_locked
+     * lo_locked (LO Locked): true
+        LO synthesizer is locked, good VCO selection.
+  Other Settings:
+     * TSP_CONST - Digital DC test signal level in LMS7002M TSP chain.
+       [key=TSP_CONST, default=16383, type=int, range=[0, 32767]]
+     * CALIBRATE -  DC/IQ calibration bandwidth
+       [key=CALIBRATE, type=float, range=[2.5e+06, 1.2e+08]]
+     * ENABLE_GFIR_LPF - LPF bandwidth (must be set after sample rate)
+       [key=ENABLE_GFIR_LPF, type=float]
+     * TSG_NCO - Enable NCO test signal
+       [key=TSG_NCO, default=4, type=int, options=(-1, 4, 8)]
+
+
+\end{lstlisting}
+
+\section{SoapySDRUtil RTL-SDR Probe Output}
+\begin{lstlisting}[language=bash, caption={SoapySDRUtil Probe Output for RTL-SDR}, label={lst: soapyProbeRTL}]
+
+    Found Rafael Micro R828D tuner
+    [INFO] Opening Generic RTL2832U OEM :: 00000001...
+    Found Rafael Micro R828D tuner
+    
+    ----------------------------------------------------
+    -- Device identification
+    ----------------------------------------------------
+      driver=RTLSDR
+      hardware=R828D
+      index=0
+      origin=https://github.com/pothosware/SoapyRTLSDR
+    
+    ----------------------------------------------------
+    -- Peripheral summary
+    ----------------------------------------------------
+      Channels: 1 Rx, 0 Tx
+      Timestamps: YES
+      Time sources: sw_ticks
+      Other Settings:
+         * Direct Sampling - RTL-SDR Direct Sampling Mode
+           [key=direct_samp, default=0, type=string, options=(0, 1, 2)]
+         * Offset Tune - RTL-SDR Offset Tuning Mode
+           [key=offset_tune, default=false, type=bool]
+         * I/Q Swap - RTL-SDR I/Q Swap Mode
+           [key=iq_swap, default=false, type=bool]
+         * Digital AGC - RTL-SDR digital AGC Mode
+           [key=digital_agc, default=false, type=bool]
+         * Bias Tee - RTL-SDR Blog V.3 Bias-Tee Mode
+           [key=biastee, default=false, type=bool]
+    
+    ----------------------------------------------------
+    -- RX Channel 0
+    ----------------------------------------------------
+      Full-duplex: NO
+      Supports AGC: YES
+      Stream formats: CS8, CS16, CF32
+      Native format: CS8 [full-scale=128]
+      Stream args:
+         * Buffer Size - Number of bytes per buffer, multiples of 512 only.
+           [key=bufflen, units=bytes, default=262144, type=int]
+         * Ring buffers - Number of buffers in the ring.
+           [key=buffers, units=buffers, default=15, type=int]
+         * Async buffers - Number of async usb buffers (advanced).
+           [key=asyncBuffs, units=buffers, default=0, type=int]
+      Antennas: RX
+      Full gain range: [0, 49.6] dB
+        TUNER gain range: [0, 49.6] dB
+      Full freq range: [23.999, 1764] MHz
+        RF freq range: [24, 1764] MHz
+        CORR freq range: [-0.001, 0.001] MHz
+      Sample rates: [0.225001, 0.3], [0.900001, 3.2] MSps
+      Filter bandwidths: [0, 8] MHz
+    
+
+\end{lstlisting}
+
+
 \section{Python Code for LimeSDR Signal Capture \label{app:limeSDRscript}}
 \begin{lstlisting}[language=Python, caption={Python code for capturing DAB signal using LimeSDR}, label={lst:limeSDR_code}]
 import numpy as np
@@ -43,7 +334,13 @@ sdr = SoapySDR.Device(dict(driver="lime"))
 print(sdr.listSensors())  # Print sensor information
 
 sdr.setSampleRate(SOAPY_SDR_RX, 0, fs)          # Set sample rate
-sdr.setGainMode(SOAPY_SDR_RX, 0, use_agc)       # Set gain mode
+# Set gain mode to manual since AGC is not supported
+sdr.setGainMode(SOAPY_SDR_RX, 0, use_agc)  # Set to False to use manual gain
+# SET THE GAIN HERE
+lna_gain = 30  # Adjust this value based on your signal strength
+sdr.setGain(SOAPY_SDR_RX, 0, "LNA", lna_gain)  # Set the gain for the selected channel
+
+
 sdr.setFrequency(SOAPY_SDR_RX, 0, freq)         # Tune to DAB frequency
 
 print('Configuration complete')

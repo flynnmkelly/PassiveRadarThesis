@@ -197,23 +197,25 @@ As with considering the SDR module, the cost versus performance trade-off is als
 
 
 \section{Digital Signal Processing}
-Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \todo{batches citation needed}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. 
-
-% NECESSARY IMAGE??
-\par \vspace{0.5cm}
-\noindent Figure \ref{fig:DSP} from Poullin \cite{detectionDABmodulation} shows the main steps of the required signal processing, which includes signal acquisition, reconstruction, and correlation. 
+Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \todo{batches citation needed}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. Fundamentally, the single channel version of this correlation is the direct signal (given its strength) compared with a time lagged version of itself given the refelection from the target, as reflected in \ref{eq:ambiguity}. Mahfoudia, et al. demonstrate the methodology behind single channel correlation and reconstruction with a DVB-T illuminator, combined with clutter suppression techniques \cite{singleChannel}.
 
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{DSPprocess.png}
-    \caption{Main steps of signal processing \cite{detectionDABmodulation}}
-    \label{fig:DSP}
-\end{figure}
+The simplest, yet probably most computationally intense method of processing the doppler map is via traditional FFT-based correlation. It works by correlating large portions of the signal in time and frequency domains, with doppler shifts applied, creating frequency bins which are used to correlate with the received signal in the frequency domain, thereby obtaining any doppler shift experienced by the target. As for the time domain, the range estimates of a target can be obtained by taking the inverse fast fourier transform (IFFT) of the correlated signal in the frequency domain, providing the relevant time delay (and therefore range). The process can be repeated over multiple windows of a given signal and then combined to create a range doppler map \cite{FFTcorrelation}.
+% % NECESSARY IMAGE??
+% \par \vspace{0.5cm}
+% \noindent Figure \ref{fig:DSP} from Poullin \cite{detectionDABmodulation} shows the main steps of the required signal processing, which includes signal acquisition, reconstruction, and correlation. 
+
+
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{DSPprocess.png}
+%     \caption{Main steps of signal processing \cite{detectionDABmodulation}}
+%     \label{fig:DSP}
+% \end{figure}
 
 
 \par \vspace{0.5cm} 
-\noindent Once signal has been demodulated, according to Moser et. al, a FFT the size of 2048 for the range domain and 512 for the doppler domain can be computed \cite{IOTpassiveRadar}, see Figure \ref{fig:FFT}. This can be combined with a decluttering chain, which can implement something along the lines of a weiner filter, or a matched filter, to remove unwanted signals from the range doppler map \cite{FundamentalsPassiveRadar}.
+\noindent The computationally intense FFT correlation method can be refined and optimised by taking slow time 'batches', reducing the size of required FFT calculations. Once the signal has been received and windowed, according to Moser et. al, a FFT the size of 2048 for the range domain and 512 for the doppler domain can be computed \cite{IOTpassiveRadar}, see Figure \ref{fig:FFT}. 
 
 \begin{figure}[htbp]
     \centering
@@ -222,9 +224,17 @@ Broadly, the goal of the signal processing for general passive bistatic radar is
     \label{fig:FFT}
 \end{figure}
 
-\noindent Logically, the step above relfects the most computationally intensive process of the project ... hence, considerations with regard to signal processing algorithms will need to be taken in order to keep the overall detection system low cost. 
+Given that single channel configurations are vulnerable to noise, interference and multipath, the outputs of pure correlation can result in clutter on the range doppler map. In the case of single channel configuration for PBR, the signl from the target (already quite weak) can be obstructed by unwanted reflections from buildings, trees, and other objects \cite{INTRO2017}. The above algorithms can be combined with a decluttering chain, which can implement something along the lines of a weiner filter, or a matched filter, to remove unwanted signals from the range doppler map \cite{FundamentalsPassiveRadar}. The implementation of clutter suppression algorithms, specifically background mean subtrafction (BMS) and guard mean substraction (GMS) has been shown by Zhang et al, working to clear up range doppler maps \cite{ZhangClutter}. This clutter suppression is especially neccessary around low doppler shift targets, as the clutter can be mistaken for the target signal. The presence of clutter given lack of suppression can be seen in Figure \ref{fig:clutter} below (yellow higher intensity pixels).
 
-\todo[inline]{more general detail about the processing chain?}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{clutterRDM.png}
+    \caption{Clutter suppression (lack of) in range doppler map, taken from testing area with no target}
+    \label{fig:clutter}
+\end{figure}
+
+
+\noindent Logically, the process above relfects the most computationally intensive step of the project ... hence, considerations with regard to signal processing algorithms will need to be taken in order to keep the overall detection system low cost, despite it not being a major factor of the testbed creation itself. 
 
 
 \section{IoT Architecture}
