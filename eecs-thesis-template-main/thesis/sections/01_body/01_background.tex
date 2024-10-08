@@ -93,6 +93,7 @@ Illuminator signals are not limited to terrestrial signals, and can also include
 
 
 \section{Range Doppler Mapping}
+\todo[inline]{DISCUSS RANGE AND FMAP scope}
 Range doppler mapping is a technique used to determine the distance and relative velocity of targets by analyzing the frequency shift (Doppler shift) and time delay of the received signals after they are reflected off the targets. The signal response of a target at a particular range and velocity can be predicted by the ambiguity function seen in equation \ref*{eq:ambiguity} \cite{INTRO2017}. 
 \begin{equation}
     \chi(\tau, f) = \int s_{\text{reference}}(t) s_{\text{received}}^*(t - \tau) e^{j2\pi f t} \, dt \label{eq:ambiguity}
@@ -272,9 +273,24 @@ The IoT architecture in the scope of this project refers to the computational pl
 
 \section{Networking with Embedded Hardware}
 
-Given that the overall goal of this thesis project is to create a low cost, embedded passive radar detection system, valuable to consider how this would be visualised, be it wired via ethernet / UART to PC or wireless protocol. 
+Given that the overall goal of this thesis project is to create a low cost, embedded passive radar detection system, valuable to consider how this would be visualised, be it via wired or wireless protocol. Essentially, depending on whether the RDM is computed on the 'edge' (ie embedded device) or on a PC, the networking requirements will differ. For example, if it is only IQ sampling completed on the embedded testbed platform, only the IQ data in the form of a .bin file needs to be transferred, however, if the RDM is computed on the embedded device, the entire RDM image / gif will need to be transferred. The following options vary in complexity and context, but all facilitate the relavant transfer of data from the embedded device to a PC for further processing or visualisation.
 
-\todo[inline]{add more about the theory of TCP/IP and networking over uq cloud, etc.}
+\subsection{USB Drive Transfer}
+The most basic method of transferring data from an embedded device to a PC is via a USB drive. This method is simple and reliable, and is ideal for applications where the data transfer rate is not critical. The data is saved to a USB drive on the embedded device, and then transferred to a PC for further processing. However, it is not ideal for real-time applications, as the data transfer is limited by proximity and a manual process is required (despite large data storage capabilities).
+
+\subsection{SSH}
+Secure Shell (SSH) is a widely-used method for remotely interfacing with embedded devices and SBC's. It allows users to securely log in to a remote device over a network and issue commands as though they were operating directly on the device. This is particularly useful for headless systems, where the embedded device does not have a monitor or keyboard connected. SSH encrypts all communication, ensuring data security. Once an SSH connection is established between the Raspberry Pi and a PC, tasks such as starting data capture, configuring parameters, or transferring files can be done directly from the PC terminal \cite{SSHOverview}. Many applications use SSH for remote monitoring and control of embedded systems, as well as for viewing the UI of SBC's, for example VNC viewer.
+
+
+\subsection{Ethernet}
+Ethernet is one of the most common and reliable methods for data transfer between embedded systems and PCs, offering high data transfer speeds and low latency. Ethernet is a wired networking technology that forms the backbone of local area networks (LANs). It supports high-speed data transmission, typically at 100 Mbps (Fast Ethernet) or 1 Gbps (Gigabit Ethernet) \cite{rpi5_wifi}, making it a suitable for applications that require real-time data transfer or when working with large datasets, such as IQ samples or RDM files. Ethernet uses a network cable (e.g., CAT5, CAT6) to connect devices in a LAN. It transmits data packets using the Internet Protocol (IP), allowing connected devices to communicate with one another. The data packets are routed through switches and routers, which direct the flow of traffic within the network. Ethernet is widely used in industrial automation, IoT, and other applications that require reliable and high-speed data transfer.
+
+\subsection{TCP Socket}
+A TCP (Transmission Control Protocol) socket is a software-based method for creating a reliable connection between two devices over a network. TCP ensures that all data packets are transmitted in the correct order and without loss, making it ideal for real-time data streaming applications such as radar data. In the case of this project the testbed would act as the client, initiating data transfer to the server (PC). This can be implemented over a wireless network \cite{TCPoverview}.
+
+\subsection{Cloud Service}
+Another modern solution for data transfer between embedded devices and PCs is the use of cloud services. The embedded testbed can upload data to cloud storage, which can then be accessed from the MacBook Air, or vice versa. An obvious downside of this method is the reliance on an internet connection, and the potential for data security issues. 
+
 
 
 

@@ -105,9 +105,7 @@ The results in Table \ref{tab:diskperf} clearly show the obtained significant pe
 
 \subsection{Antenna Testing \label{sec:antennaVerification}}
 
-% IMAGE OF THE NOISE FLOOR COMPARISON
-
-Before calculations or detection was performed, the signal strength of the received signal was measured. This was done by first using the RTL-SDR and the monopole SMA antenna and compared to the Yagi-Uda antenna. The received signal strength, representing the illuminator DAB signal, was measured approximately 6km away from the transmitter tower. \todo{image of maps reference} The results of the signal strength measurements are shown in Table \ref{tab:signalstrength}.
+Before calculations or detection was performed, the signal strength of the received signal was measured. This was done by first using the RTL-SDR and the monopole SMA antenna and compared to the Yagi-Uda antenna. The received signal strength, representing the illuminator DAB signal, was measured approximately 6km away from the transmitter tower. The results of the signal strength measurements are shown in Table \ref{tab:signalstrength}.
 
 \begin{table}[h!]
     \centering
@@ -124,6 +122,15 @@ Before calculations or detection was performed, the signal strength of the recei
 
 The above table reflects the high gain of the Yagi-Uda antenna, which is a directional antenna, compared to the monopole SMA antenna. Overall, this testing was valuable to benchmark a noise floor and appreciate the neccessity for a high gain antenna, especially in the context of the low power target signal.
 
+% GEOMETRY OF TESTING - image of geometry
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{testingGeometry.png}
+    \caption{Antenna and Testbed Testing Geometry}
+    \label{fig:antennaGeometry}
+\end{figure}
+
+
 \subsection{GPIO and Software Excecutable Testing \label{sec:gpioTesting}}
 
 The GPIO buttons and LED's were tested using a simple python script, which was executed on the RPi5. The script was able to detect the button press and light the LED, as expected. This was a simple test, but was important to ensure the user interface was functioning correctly.   This was implemented via the gpiod library, which was installed on the RPi5. Specifically, the script utilised the gpiochip4 which is the GPIO chip on the RPi5. 
@@ -139,8 +146,11 @@ Once basic arcade button functionality had been established, using the \textit{s
 
 \noindent This was tested with the lime SDR
 
+\todo{TALK ABOUT USE OF CRONTAB FOR TASK AUTOMATION ON BOOT}
+
 \subsection{Detection Edge Processing Comparison} \label{sec:edgeProcessing}
 
+\subsection{Enclosure Creation} \label{sec:enclosureResults}
 
 \section{RTL-SDR vs LimeSDR Detection Comparison \label{sec:SDRcomparison}}
 
