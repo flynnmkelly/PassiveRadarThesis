@@ -126,7 +126,7 @@ The physical setup of these antennas for testing comprised of an "Over the Shoul
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.6\textwidth]{overShoulder.png}
+    \includegraphics[width=0.8\textwidth]{overShoulder.png}
     \caption{Geometry of Over the Shoulder Antenna Placement}
     \label{fig:overTheShoulder}
 \end{figure}
@@ -184,10 +184,10 @@ When utilising SDR modules, it is necessary to have capabilities to perform nece
 In summary, the above software was selected to ensure portability between both the testbed and the higher level M1 Mac, whilst also accounting for potential SDR hardware changes. The individual component testing comprised of sampling DAB 9A, ensuring correct file parsing and basic noise floor readings.
 
 \subsection{Networking Requirements \label{sec:networking}}
+Given the abundance of options explored in the background section, initially, the Raspberry Pi was connected to via SSH and VNC viewer over WiFi for configuration and testing. Eventually TCP baswed client-server communication was used to facilitate the transfer of data between the RPi5 and the M1 Mac. The TCP server was implemented in Python on the M1 Mac, and the TCP client was implemented in Python on the M1 Mac. The TCP client was responsible for sending the sampled data to the TCP client, which was responsible for receiving the data and processing it. This was implemented via the \texttt{socket} library in Python, and was tested on the RPi5 and the M1 Mac, with the results discussed in the results section.
 
 
 % METHOD FOR TESTING Comparison
- NOT THE ACTUAL RESULTS
 \section{Relevant Digital Signal Processing}
 
 Once the first phase of the testbed verification was completed, the next step was to implement the digital signal processing (DSP) algorithms that would be used to process the received signals and detect the presence of aerial vehicles, and then compare the results between the RTL-SDR and the LimeSDR, along with edge compute times (on the Rpi5) and higher level mac processing. Whilst both SDR implementations used the same fundamental DSP algorithms (FFT and autocorrelate), there were some system factors that were impacted by the comparison. 

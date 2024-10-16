@@ -1,5 +1,5 @@
 \chapter{Background \label{sec:background}}
-\todo[inline]{Background: this should include all (appropriately cited) information (concepts and prior literature) for a layperson to understand your project/experiment. \\ - NEED TO RESEARCH AND DISCUSS THE EFFECTS OF NOISE AND TYPICAL ATTNENUATION}
+\todo[inline]{Background:NEED TO RESEARCH AND DISCUSS THE EFFECTS OF NOISE AND TYPICAL ATTNENUATION - TEXTBOOK}
 
 \noindent
 This chapter collates the necessary background information for the project, including the fundamentals of passive radar, the use of illuminators of opportunity, range doppler mapping, radio hardware, digital signal processing, IoT architecture, and networking with embedded hardware.
@@ -198,21 +198,13 @@ As with considering the SDR module, the cost versus performance trade-off is als
 
 
 \section{Digital Signal Processing}
+\todo[inline]{Bandwidth RDM and clutter suppression} 
 Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \todo{batches citation needed}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. Fundamentally, the single channel version of this correlation is the direct signal (given its strength) compared with a time lagged version of itself given the refelection from the target, as reflected in \ref{eq:ambiguity}. Mahfoudia, et al. demonstrate the methodology behind single channel correlation and reconstruction with a DVB-T illuminator, combined with clutter suppression techniques \cite{singleChannel}.
 
 
 The simplest, yet probably most computationally intense method of processing the doppler map is via traditional FFT-based correlation. It works by correlating large portions of the signal in time and frequency domains, with doppler shifts applied, creating frequency bins which are used to correlate with the received signal in the frequency domain, thereby obtaining any doppler shift experienced by the target. As for the time domain, the range estimates of a target can be obtained by taking the inverse fast fourier transform (IFFT) of the correlated signal in the frequency domain, providing the relevant time delay (and therefore range). The process can be repeated over multiple windows of a given signal and then combined to create a range doppler map \cite{FFTcorrelation}.
-% % NECESSARY IMAGE??
-% \par \vspace{0.5cm}
-% \noindent Figure \ref{fig:DSP} from Poullin \cite{detectionDABmodulation} shows the main steps of the required signal processing, which includes signal acquisition, reconstruction, and correlation. 
 
-
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{DSPprocess.png}
-%     \caption{Main steps of signal processing \cite{detectionDABmodulation}}
-%     \label{fig:DSP}
-% \end{figure}
+% ADD ANOTHER IMAGE??? --> Processing chain from Poster
 
 
 \par \vspace{0.5cm} 
