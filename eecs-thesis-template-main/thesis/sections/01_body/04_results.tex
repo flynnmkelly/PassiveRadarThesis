@@ -77,7 +77,16 @@ Further information about the LimeSDR and its channels was obtained using the fo
     \label{fig:limeSDRpsd}
 \end{figure}
 
-Notably, given the LimeSDR has a 12 bit ADC, the output complex IQ data is 32 bits total, with a 16 bit real and 16 bit imaginary component (12 bits zero padded at LSB). The output settings of the LimeSDR are configured via the \textit{SOAPYSDRCS16} format. This resulted in the saved .bin file being 8.2MB for 1 second of data, again showing the high storage requirements for the testbed.
+Notably, given the LimeSDR has a 12 bit ADC, the output complex IQ data is 32 bits total, with a 16 bit real and 16 bit imaginary component (12 bits zero padded at LSB). The output settings of the LimeSDR are configured via the \textit{SOAPYSDRCS16} format. This resulted in the saved .bin file being 8.2MB for 1 second of data, again showing the high storage requirements for the testbed. On the RPi5, GQRX was also able to be utilised to view the waterfall plot of the LimeSDR, as seen in Figure \ref{fig:limeSDRwaterfall}, adding an additional layer of verification, other than the python script and source libraries. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{DVBtLime.png}
+    \caption{LimeSDR Waterfall Plot (Channel 7 DVB-T Multiplex 177.5MHz)} 
+    \label{fig:limeSDRwaterfall}
+\end{figure}
+
+In figure \ref{fig:limeSDRwaterfall}, the waterfall plot shows almost 10Mhz width of spectrum bandwidth, highlighting the capability of the LimeSDR to sample a wide bandwidth of spectrum. This is in contrast to the RTL-SDR which has a maximum sample rate of 3.2MS/s, and a bandwidth of 2.4MHz. Importantly, this bandwidth and sampling rate is also variable (via source scripting or API's), and multipel different sampling rates were experimented with during testing.
 
 \subsection{RPi5 and NVME Testing \label{sec:sbcVerification}}
 In order to compare and quantify the differences in the storage performance between the microSD card and the NVME SSD, a series of tests were conducted, utilising the following linux commands via the terminal of the RPi5.
@@ -144,13 +153,39 @@ Once basic arcade button functionality had been established, using the \textit{s
     '202.928e6', '-n', '2048000', 'testData.bin'])
 \end{verbatim}
 
-\noindent This was tested with the lime SDR
+\noindent This was tested with the lime SDR on the Debian baed Rpi5, and worked well. On both the Rpi5, the config/sampling and processing functionality was implemented through seperate Jupiter notebooks, for ease of use and debugging purposes along with timing and performance testing. These notebooks were migrated across to scripts for the final testbed implementation. The scripts were tested and integrated with the GPIO buttons and LED's, and the user interface was tested to ensure the user could start and stop the data collection and processing. In order to ensure execution at boot/run time on the Rpi5, the main testbed python script was configured via a \textbf{crontab} entry, which was tested and verified, and is viewable in the appendix. The efficacy of tis was tested via running the below command after boot:
+% ADd code of crontab entry
+\begin{verbatim}
+    ps -ef | grep python
+\end{verbatim}
 
-\todo{TALK ABOUT USE OF CRONTAB FOR TASK AUTOMATION ON BOOT}
+The python script that is run by the crontab essentially polls the latch user buttons, and then sample and compute the data appropriately. The code for the python script and the crontab entry can be viewed in the appendix \todo{Add to appendix}.
 
 \subsection{Detection Edge Processing Comparison} \label{sec:edgeProcessing}
+Other than some configuration changes, the processing scripts for M1 Mac and the Rpi5 were essentially the same, revolving around range doppler processing windows of 500K samples. The figure below shows the processing time for the M1 Mac and the Rpi5, with the Rpi5 taking approximately 6 times longer to process the same amount of data.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{timeComparison.png}
+    \caption{Processing Time Comparison}
+    \label{fig:processingTime}
+\end{figure}
+
+The difference above is as expected, given the M1 Mac has a 8 core CPU and 16GB of RAM, compared to the Rpi5 which has a 4 core CPU and 8GB of RAM. The results highlight how networking the .bin files to a more powerful computer for processing could be a potential solution to the Rpi5's processing limitations.
 
 \subsection{Enclosure Creation} \label{sec:enclosureResults}
+Once the functionality of the testbed was verified, the enclosure was designed and 3D printed. The case design was modelled off source code from \cite{RPiCase}, however it was necessary to enhance the original design with cutouts for the user buttons and also stretch the top of the case to accomodate the SMA connectors and buttons. 
+
+% Image of the enclosure design
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{RPiCase.png}
+    \caption{Enclosure Design}
+    \label{fig:enclosureDesign}
+\end{figure}
+
+Fusion 360 was used to design the case, and the STL files were then 3D printed. The design of the final case design can be seen in Figure \ref{fig:enclosureDesign}. The case was printed using a Bambu Lab P1S 3D printer, utilising the default PLA filament, which is not ideal given the potential heat generated by the RPi5 and the LimeSDR. The case was printed in two parts, the top and the bottom, and then assembled. However, given the active and passive cooling requirements of the RPi5 and the LimeSDR, it was deemed fit for purpose.
+
 
 \section{RTL-SDR vs LimeSDR Detection Comparison \label{sec:SDRcomparison}}
 

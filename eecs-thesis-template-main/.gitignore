@@ -1,0 +1,14 @@
+# Ignore LaTeX artifacts
+*.bbl
+*.blg
+*.toc
+*.bcf*
+*.aux
+*.fdb*
+*.log
+*.run.xml*
+*.synctex*
+*.out
+*.fls
+*.lof
+*.lot

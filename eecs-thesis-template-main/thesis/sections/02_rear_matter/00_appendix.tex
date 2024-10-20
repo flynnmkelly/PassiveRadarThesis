@@ -1,6 +1,10 @@
 \begin{appendices}
 \cleardoublepage
 
+\chapter{Utilised Code Listings}
+
+The code used throughout this 
+
 \chapter{System Intialization and Testing}
 
 The below sections detail the initial setup and testing of the Raspberry Pi 5 and different SDR hardware modules.
@@ -295,110 +299,36 @@ libusb: warning [darwin_transfer_status] transfer error: timed out
 
 \end{lstlisting}
 
-
-\section{Python Code for LimeSDR Signal Capture \label{app:limeSDRscript}}
-\begin{lstlisting}[language=Python, caption={Python code for capturing DAB signal using LimeSDR}, label={lst:limeSDR_code}]
-import numpy as np
-import os
-import scipy
-from matplotlib import pyplot as plt
-import SoapySDR
-from SoapySDR import SOAPY_SDR_RX, SOAPY_SDR_CS16
-
-########################################################################################
-# Settings
-########################################################################################
-# Data transfer settings
-rx_chan = 0               # RX1 = 0, RX2 = 1 - Using the RX1 Wideband
-N = 2048000                  # Number of complex samples per transfer
-fs = 2.048e6               # Radio sample Rate
-freq = 202.928e6               # LO tuning frequency in Hz - DAB 9A
-use_agc = True           # Use or don't use the AGC
-timeout_us = int(5e6)
-
-# Recording Settings
-cplx_samples_per_file = 2048000  # Complex samples per file
-nfiles = 1              # Number of files to record
-rec_dir = '/Users/flynnmkelly/Desktop/Thesis/PassiveRadarThesis/LimeSDR'  # Location of drive for recording
-file_prefix = 'TestFile'   # File prefix for each file
-
-########################################################################################
-# Receive Signal
-########################################################################################
-# File calculations and checks
-cplx_samples_per_file = N   # Use entire buffer size for one file
-real_samples_per_file = 2 * cplx_samples_per_file
-
-# Initialize the LimeSDR receiver
-sdr = SoapySDR.Device(dict(driver="lime"))
-print(sdr.listSensors())  # Print sensor information
-
-sdr.setSampleRate(SOAPY_SDR_RX, 0, fs)          # Set sample rate
-# Set gain mode to manual since AGC is not supported
-sdr.setGainMode(SOAPY_SDR_RX, 0, use_agc)  # Set to False to use manual gain
-# SET THE GAIN HERE
-lna_gain = 30  # Adjust this value based on your signal strength
-sdr.setGain(SOAPY_SDR_RX, 0, "LNA", lna_gain)  # Set the gain for the selected channel
-
-
-sdr.setFrequency(SOAPY_SDR_RX, 0, freq)         # Tune to DAB frequency
-
-print('Configuration complete')
-
-# Create data buffer and start streaming
-rx_buff = np.empty(2 * N, np.int16)  # Buffer for data
-rx_stream = sdr.setupStream(SOAPY_SDR_RX, SOAPY_SDR_CS16, [rx_chan]) # Setup data stream
-sdr.activateStream(rx_stream)  # Start streaming
-
-# Record the data
-sr = sdr.readStream(rx_stream, [rx_buff], N, timeoutUs=timeout_us)
-rc = sr.ret
-assert rc == N, 'Error Reading Samples from Device (error code = %d)!' % rc
-
-# Save data to file
-file_name = os.path.join(rec_dir, '{}.bin'.format(file_prefix))
-rx_buff.tofile(file_name)
-
-# Stop streaming and close connection
-sdr.deactivateStream(rx_stream)
-sdr.closeStream(rx_stream)
+\section{Crontab Configuration}
+\begin{lstlisting}[language=bash, caption={Crontab Configuration for Raspberry Pi}, label={lst:crontab}]
+flynnmkelly@raspberrypi:~ $ sudo crontab -l
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+@reboot sh /home/flynnmkelly/Desktop/Testbed/launcher.sh >/home/flynnmkelly/logs/cronlog 2>&1
 \end{lstlisting}
 
-% ------------------------------
 
-\section{Code to Plot PSD for Testing LimeSDR}
 
-\begin{lstlisting}[language=Python, caption={Main Code to Read Data and Plot PSD}, label={lst:main_code}]
-# Main Code to Read Data and Plot PSD
-file_name = 'TestFile.bin'  # Specify your file name here
-fs = 2.048e6  # Sampling frequency
-center_freq = 202.928e6  # Center frequency
-
-# Read complex data from the file
-complex_data = read_complex_int16(file_name)
-
-# Compute the power spectral density
-f, Pxx = welch(complex_data, fs, nperseg=2048)
-
-# Shift the frequency axis
-f_shifted = f + center_freq
-
-# Plot PSD
-plt.figure(figsize=(12, 6))
-plt.semilogy(f_shifted, Pxx)
-plt.title('Power Spectral Density of the DAB Signal')
-plt.xlabel('Frequency (Hz)')
-plt.ylabel('Power/Frequency (dB/Hz)')
-plt.grid(True)
-
-# Set x-axis limits to show the full spectrum around the center frequency
-plt.xlim(center_freq - fs/2, center_freq + fs/2)
-
-# Format x-axis ticks to show MHz instead of Hz
-plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f"{x/1e6:.3f}"))
-plt.xlabel('Frequency (MHz)')
-
-plt.show()
-\end{lstlisting}
 
 \end{appendices}

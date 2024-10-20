@@ -1,5 +1,4 @@
 \chapter{Background \label{sec:background}}
-\todo[inline]{Background:NEED TO RESEARCH AND DISCUSS THE EFFECTS OF NOISE AND TYPICAL ATTNENUATION - TEXTBOOK}
 
 \noindent
 This chapter collates the necessary background information for the project, including the fundamentals of passive radar, the use of illuminators of opportunity, range doppler mapping, radio hardware, digital signal processing, IoT architecture, and networking with embedded hardware.
@@ -69,26 +68,81 @@ Where:
 
 \par \vspace{0.5cm} 
 \todo[inline]{NEED TO MENTION / RESEARCH THE EFFECT OF NOISE AND DECIBELS EXPECTED HERE.}
-% \noindent Ideally this project would process just the target signal, however, that is an unrealistic expectation due to the presence of clutter. Clutter refers to unwanted signal that eminates from objects in the natural environment such as buildings, trees and ground \cite{zhang2023intelligent}. This process of target signal clutter suppression and its impact on range doppler mapping will be discussed later in the literature review.  
 
-\section{Illuminators of Opportunity}
-The illuminator of opportunity is the signal that is used to illuminate the target, and is the primary source of the signal that is received by the passive radar system. The illuminator of opportunity can be any signal that is transmitted through the air, such as television radio or even satellite broadcasts, and can be tailored to the specific requirements of the passive radar system. Griffiths and Baker outline the three key paramaters when selecting an illuminator \cite{INTRO2017}:
+% -------------------------------------------------
+\section{Illuminators of Opportunity} %add label
+\label{sec:illuminators}
+
+The illuminator of opportunity is the signal that is used to illuminate the target, and is the primary source of the signal that is received by the passive radar system. The illuminator of opportunity can be any signal that is transmitted through the air, such as television radio or even satellite broadcasts, and can be tailored to the specific requirements of the passive radar system. Firstly it is necessary to comprehend the relevant radio frequency spectrum, followed by relevant metrics for passive radar, along with the advantages of digital signals.
+\subsection{Radar and the Radio Frequency Spectrum}
+% Image and description of the radio frequency spectrum
+All wireless digital and analog signals are transmitted via a carrier frequency occupying some portion of the radio frequency spectrum. Each country regulates the use of the radio frequency spectrum, and the Australian Communications and Media Authority (ACMA) is responsible for regulating the radio frequency spectrum in Australia. The radio frequency spectrum is divided into bands, each with a specific range of frequencies, and each band is allocated for a specific use, such as television, radio, or emergency communcations. The spectrum allocation chart for Australia is shown in Figure \ref{fig:radioSpectrum} below. In general, radar systems are capable of operating across the entire radio frequency spectrum, with the specific frequency band chosen depending on the application and the desired range and resolution of the radar system. For example, Lockheed Martin have products suited to Low Band (VHF / UHF - 30-2Ghz) which is effective for long range detection, the midband (S/C - 2-8GHZ) and the high band which is not optimal for range but resolution \cite{LockheedRadar}. The below chart shows the Australian HF to UHF, with red reflecting potential illuminator signals.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{ACMAspectrum.png}
+    \caption{Australian radio frequency spectrum allocation HF to UHF \cite{SpectrumImage}}
+    \label{fig:radioSpectrum}
+\end{figure}
+
+In the context of passive radar, the above three bands are relevant, firstly, due to the sheer volume of broadcast signals across the HF and VHF, representing a continuous source of illumination. Moreover, most of these signals have relatively high transmit power (with transmitters geolocated to facilitate maximum coverage for a given area), enabling clear reflections from targets \cite{DTSO2009}.
+
+\subsection{Key Parameters for Illuminators of Opportunity}
+Griffiths and Baker outline the three key paramaters when selecting an illuminator \cite{INTRO2017}:
 \begin{enumerate}[label=\arabic*.]
     \item The \textbf{Power Density} at the target: It refers to the strength of the signal (in Watts per square meter) that reaches the target area from the illuminator. Higher power density can improve detection performance due to a stronger return signal.
-    \item The \textbf{Nature of the Waveform}: This includes the waveform's properties, such as bandwidth and modulation, which can affect the radar's resolution and ability to distinguish between targets and clutter.
-    \item The \textbf{Coverage}: The spatial area over which the illuminator's signal is spread. Adequate coverage is essential to ensure the target is within the illuminator's effective range.
+    \item The \textbf{Nature of the Waveform}: This includes the waveform's properties, such as bandwidth and modulation, which can affect the radar's resolution and ability to distinguish between targets and clutter. The nature of the waveform can also be impacted by the program contents of the illuminator signal, for example, the waveform of FM broadcasts is noticeable different if the broadcast is music or speech.
+    \item The \textbf{Coverage}: The spatial area over which the illuminator's signal is spread. Adequate coverage is essential to ensure the target is within the illuminator's effective range. As mentioned above, public broadcast signals are often optimized for a given locality.
 \end{enumerate}
 
-Illuminator signals are not limited to terrestrial signals, and can also include signals from satellites, and can be tailored to the specific requirements of the passive radar system. The illuminator of opportunity primarily explored for this project is the DAB+ signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. The DAB+ signal is a good option due to its high power density, and its relatively high bandwidth, which can be used to improve the radar's resolution and ability to distinguish between targets and clutter. Moreover, the geographical proximity of a DAB+ transmitter at Mt Cootha to the University of Queensland, St Lucia campus, making it a potentially ideal choice for the project. Another prospective digital illuminator signal is DVB-T (digital video broadcast - terrestrial), which is similar in its digital modulation to DAB, but provides increased bandwidth and signal power \cite{DVBsignal}. Furthemore, as shown by Yin et. al \cite{DVBnoise}, due to the relative complexity of  DVB visual signals, more signal processing steps can be required, which could exceed prospective hardware limitations of this project.
+\subsection{Utility of Digital Illuminators}
+In general, digital signals are favourable for passive radar due to their large bandwidth, constant envelope and relatively large and stable transmit power. Relevant Australian terrestrial analog signals for use in passive bistatic radar include Amplitude Modulation (AM) radio, Frequency Modulation (FM). Conversely, relevant Australian digital signals include Digital Audio Broadcasting (DAB) and Digital Video Broadcasting (DVB) \cite{DABfeatures}. With DVB-T being similar to DAB with a higher bandwidth and power, potentially resulting in more signal processing steps can be required as shown by Yin et. al \cite{DVBnoise}. The images below show the ambiguity functions of two equivalent frequency band signals, DRM (low frequency digital radio broadcast) and AM radio. The DRM signal has a much wider bandwidth, and a more constant envelope, which is advantageous for passive radar systems.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{AMspeechAmbSmall.png}
+    \caption{Ambiguity Function of AM Signal \cite{AmbiguityCompare}}
+    \label{fig:ambiguityAM}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{drmPlotSmall.png}
+    \caption{Ambiguity Function of DRM Signal \cite{AmbiguityCompare}}
+    \label{fig:ambiguityDRM}
+\end{figure}
+
+Whilst the bandwidth of both the above channels is relatively small, the ambiguity functions from Thomas et al. \cite{AmbiguityCompare} show aforementioned parameters.
+  
+\par \vspace{0.5cm} 
+Illuminator signals are not limited to terrestrial signals, they can also include signals from satellites, and can be tailored to the specific requirements of the passive radar system. Benefits of satellite based illuminators include increased coverage area, and a more evenly distributed power density \cite{satelliteIlluminator}. An imporant distinction for satellite illuminators is the condition of geostationary orbit, resulting in negligible relative motion between the satellite and receiver. Another condition for satellite based illuminators is the requirement for high directional gain antennas, as the illuminator signal is transmitted from a satellite in geostationary orbit, which is approximately 35,786 km above the equator \cite{satelliteIlluminator}. Specifically, the satellite illuminator of interest is DVB-S, digital sattelite TV broadcast in the ku-band, which is a COFDM signal, with a bandwidth of 27-36MHz, and a typical power of 50-150W \cite{DVB-S}. Notably, the large broadcast bandwidth results in significant signal processing requirements, as shown by Yin et. al \cite{DVBnoise}.
+
+
+\par \vspace{0.5cm}
+\begin{table}[!ht]
+    \centering
+    \caption{Properties of Potential IoO's}
+    \label{tab:rf_spectrum_management}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{4cm}|}
+        \hline
+        \textbf{Broadcast network} & \textbf{Frequency band (MHz)} & \textbf{Transmitter bandwidth} & \textbf{Typical transmitter power (EIRP)} \\ \hline
+        FM radio & 88–108 & 0–100 kHz & 10–100 kW \\ \hline
+        DAB radio & 195–209 & 1.536 MHz & 1–10 kW \\ \hline
+        DVB-T (television) & 177-227 & 7 MHz & 1–100 kW \\ \hline
+        DVB-S (satellite) & 10.7-12.75(GHz) & 27–36 MHz & 50–150 W (transponder power) \\ \hline
+    \end{tabular}
+\end{table}
+
+
+The above table highlights some key differences in broadcast signals, potential draw backs of utilising terrestrial digital signals include geographical constraints and low signal power in rural areas, along with multipath effects in urban and high reflective areas \cite{DTSO2009}. 
+
+% \noindent A potential problem associated with the use of DAB as an illuminator is direct signal interference (DSI), with the effects being amplified in urban environments. Coleman et. al \cite{DABfeatures} explain that the sheer signal size of direct illuminator size relative to surveillance signal size results in a high level of DSI. They outline that the cross polarisation of the transmitted DAB signal can be utilised along with illuminator cancellation filtering to attain higher level suppression. The leakage of the illuminator signal into the target signal can be due to a range of factors including buildings, trees and other reflective items as highlighted by Palmer et. al \cite{DTSO2009}.
 
 \par \vspace{0.5cm} 
-\noindent A potential problem associated with the use of DAB as an illuminator is direct signal interference (DSI), with the effects being amplified in urban environments. Coleman et. al \cite{DABfeatures} explain that the sheer signal size of direct illuminator size relative to surveillance signal size results in a high level of DSI. They outline that the cross polarisation of the transmitted DAB signal can be utilised along with illuminator cancellation filtering to attain higher level suppression. The leakage of the illuminator signal into the target signal can be due to a range of factors including buildings, trees and other reflective items as highlighted by Palmer et. al \cite{DTSO2009}.
+\noindent Typical characteristics of Australian DAB+ signals include frequency of just over 200MHz, bandwidth of approximately 1.5MHz, and a minimal output power of 10kW effective radiated power (ERP), consequently covering a large area \cite{DABfeatures}. These digital signals employ a modulation scheme called COFDM (coded orthogonal frequency division multiplexing), which is a form of multi-carrier modulation that is robust against multipath interference \cite{INTRO2017}. COFDM works by dividing the signal into multiple, simultaneous streams which are orthogonal to each other, modulated at a different frequency, maximising robust signal propogation. This is particularly useful in the context of passive radar, as it allows for the target and reference signal to be received by the passive radar system even if it has been reflected off multiple surfaces, such as buildings or trees. More specifically, the Australian implementation of DAB+ is dictated by the ETSI standard EN 300 401, which specifies the modulation, coding and multiplexing of the signal \cite{etsi_DAB_standard}. DAB+ is encoded via the AAC+, with proper licensing required, the most commonly utilised forward error correction(FEC) is 3A \cite{DABaustralia}. At a high level, these protocols of DAB+ reflect a channel model which has encoding, modulation and noise handling (FEC) built in, which can be advantageous for passive radar systems. In summary, DAB along with other digital signals are advantageous for passive radar due to their wide bandwidth, constant envelope, and relatively high transmit power\cite{DABambiguity}. 
 
-\par \vspace{0.5cm} 
-\noindent Typical characteristics of Australian DAB+ signals include frequency of just over 200MHz, bandwidth of approximately 1.5MHz, and a minimal output power of 10kW effective radiated power (ERP), consequently covering a large area \cite{DABfeatures}. These digital signals employ a modulation scheme called COFDM (coded orthogonal frequency division multiplexing), which is a form of multi-carrier modulation that is robust against multipath interference \cite{INTRO2017}. COFDM works by dividing the signal into multiple, simultaneous streams which are orthogonal to each other, modulated at a different frequency, maximising robust signal propogation. This is particularly useful in the context of passive radar, as it allows for the target and reference signal to be received by the passive radar system even if it has been reflected off multiple surfaces, such as buildings or trees. More specifically, the Australian implementation of DAB+ is dictated by the ETSI standard EN 300 401, which specifies the modulation, coding and multiplexing of the signal \cite{etsi_DAB_standard}. DAB+ is encoded via the AAC+, with proper licensing required, the most commonly utilised forward error correction(FEC) is 3A \cite{DABaustralia}. At a high level, these protocols of DAB+ reflect a channel model which has encoding, modulation and noise handling (FEC) built in, which can be advantageous for passive radar systems.
-
-\par \vspace{0.5cm} 
-\noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}. The above being said, every reason that DAB is appropriate for passive radar also extends to other digital illuminators of opportunity, such as DVB-T, which is also a COFDM signal, and has a higher bandwidth and power than DAB.
+% \par \vspace{0.5cm} 
+% \noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}. The above being said, every reason that DAB is appropriate for passive radar also extends to other digital illuminators of opportunity, such as DVB-T, which is also a COFDM signal, and has a higher bandwidth and power than DAB.
 
 
 
