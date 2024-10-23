@@ -6,11 +6,11 @@ This chapter contains the design decision and steps taken to complete the testbe
 \section{Hardware \label{sec:hardware}}
 
 \subsection{Software Defined Radio \label{sec: SDRdongleHardware}}
-The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. \todo{ADD SECTION LABELS} As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation \cite{SDRtheory}. Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost and qualirt RTL-SDR to use as a benchmark, before progressing to later prototyping on higher end LimeSDR.
+The fundamental hardware aspect for this project is the Software Defined Radio (SDR), specifically, the SDR receiver module. As mentioned in section 2,4, software defined radio technology has been recently experienced decreasing costs and proliferation \cite{SDRtheory}. Broadly, the testbed was designed to accomodate a potential range of USB-A capable SDR modules, with the capability initially tested on a low cost and qualirt RTL-SDR to use as a benchmark, before progressing to later prototyping on higher end LimeSDR.
 
 \vspace{0.5cm} \noindent 
 \textbf{(i) RTL-SDR}
-The low cost RTL-SDR was chosen as the initial SDR module for testbed prototyping  due to its low cost and wide availability. The specifics of the RTL-SDR are stated in section 2.4 \todo{REF}, it was connected to the RPi5 and higher level M1 Mac along with a simple SMI antenna as seen in the figure below \ref*{fig:rtlSDR}. 
+The low cost RTL-SDR was chosen as the initial SDR module for testbed prototyping  due to its low cost and wide availability. The specifics of the RTL-SDR are stated in section 2.4, it was connected to the RPi5 and higher level M1 Mac along with a simple SMI antenna as seen in the figure below \ref*{fig:rtlSDR}. 
 
 \begin{figure}[htbp]
     \centering
@@ -51,7 +51,7 @@ The LimeSDR was chosen as the higher end SDR module for the implementation and t
     \label{fig:limeSDR}
 \end{figure}
 
-The actual SDR module was encased as seen in XXX \todo{add photo in results}, with the only relevant conenctions being a singular RX SMA port, power supply (6V DC) and a USB type B connection. The block diagram of the LimeSDR can be seen in the figure below \ref{fig:limeSDRblock}, and evidently it is a more complex system than the RTL-SDR, most notably with the CycloneIV FPGA chip, which is used for signal processing and control.
+The actual SDR module was encased as seen in XXX \ref{fig:finalTestbed}, with the only relevant conenctions being a singular RX SMA port, power supply (6V DC) and a USB type B connection. The block diagram of the LimeSDR can be seen in the figure below \ref{fig:limeSDRblock}, and evidently it is a more complex system than the RTL-SDR, most notably with the CycloneIV FPGA chip, which is used for signal processing and control.
 
 In order to validate the standalone functionality of the LimeSDR, the following steps were taken, and discussed in the results section:
 \begin{itemize}
@@ -68,8 +68,7 @@ In order to validate the standalone functionality of the LimeSDR, the following 
     \label{fig:limeSDRblock}
 \end{figure}
 
-Another notable hardware feature of the LimeSDR is the LMS7002M transceiver chip which can facilitate both RX and TX capabilities, along with built in ADC/DAC (12 bit) capability \cite{limesdr_usb}. The bandwidth advantage of the LimeSDR was a key factor in its selection, as the wider bandwidth allows for more data to be captured and processed, specifically in the context of the digital broadcast signal used as the illuminator of opportunity. This bandwidth advantage directly results in increased range resolution on the range doppler maps, which is a key metric for the detection of aerial vehicles. \todo{Discuss USB 3.0 bottlneck, until X bandwidth samples/sec}
-
+Another notable hardware feature of the LimeSDR is the LMS7002M transceiver chip which can facilitate both RX and TX capabilities, along with built in ADC/DAC (12 bit) capability \cite{limesdr_usb}. The bandwidth advantage of the LimeSDR was a key factor in its selection, as the wider bandwidth allows for more data to be captured and processed, specifically in the context of the digital broadcast signal used as the illuminator of opportunity. This bandwidth advantage directly results in increased range resolution on the range doppler maps, which is a key metric for the detection of aerial vehicles. As seen in \ref{tab:SDRcomparison}, the LimeSDR has a stated maximum sampling rate of 61.44MHz,, when sampling at this rate, the bottlneck can become the USB host interface. With the maximum sample rate corresponding to about 240MB/s, which if not over USB 3.0 can limit the data transfer rate (USB 2.0 is limited to 480Mbps or 60MB/s). Moreover, as the maximum sampling rate is approached, the storage and processing requirements of the host computer also increase, becoming unreasonable at a certain point for samples of around 10 seconds.
 
 \subsection{Embedded Computing Platform \label{sec:embedded computing}}
 
@@ -96,7 +95,7 @@ As seen in Table \ref{tab:sbc_comparison}, the RPi5 has a quad-core ARM Cortex-A
     \item \textbf{Software Support:} Extensive community support and availability of a wide range of software tools and libraries, especially for Linux-based systems, e.g. RTL-SDR, GNU Radio, etc. see section \ref{sec:SDRsoftware}.
 \end{itemize}
 
-\noindent \textbf{Disadvantages} \todo{Add to this as project preogresses}
+\noindent \textbf{Disadvantages}
 \begin{itemize}
     \item \textbf{Limited Built-In Storage:} The built-in storage is minimal, so additional external storage is necessary for handling large volumes of data.
     \item \textbf{Performance Constraints:} While powerful, it may not handle very high-frequency or complex radar signal processing as efficiently as more specialized or high-performance computing platforms, custom algorithms potentially required \cite{IOTpassiveRadar}.
@@ -120,9 +119,10 @@ Further NVME SSD configuration details include formatting with the ext4 file sys
 
 
 \subsection{Antenna Configuration \label{sec:antenna}}
-Intially, a simple SMA whip antenna was used for the RTL-SDR, as seen in Figure \ref{fig:rtlSDR}. These low cost antennas are typically used for general purpose reception, and are not optimised for any specific frequency range. The whip antenna was used for initial testing and prototyping, and was capable of receiving a range of broadcast signals with a NOISE FLOOR X. Eventually a more specialised antenna was used, the Yagi-Uda antenna, which is a directional antenna that is commonly used for point-to-point communication. The Yagi-Uda antenna was used for the final testing and validation of the testbed. The Yagi-Uda was utilised with a CLF200 50 Ohm coaxial cable, which was connected to the RTL-SDR. 
+Intially, a simple SMA whip antenna was used for the RTL-SDR, as seen in Figure \ref{fig:rtlSDR}. These low cost antennas are typically used for general purpose reception, and are not optimised for any specific frequency range. The whip antenna was used for initial testing and prototyping, and was capable of receiving a range of broadcast signals with a NOISE FLOOR X. Eventually a more specialised antenna was used, the Yagi-Uda antenna, which is a directional antenna that is commonly used for point-to-point communication. The Yagi-Uda antenna was used for the final testing and validation of the testbed. The Yagi-Uda was utilised with a CLF200 50 Ohm coaxial cable, which was connected to the RTL-SDR. Specifically, the 18 element UHF yagi-uda antenna, was quoted as having 15.5dB forward gain and 25dBi front-to-back ratio \cite{AntennaPiece}. Typically, with directional antennas, such as the Yagi-Uda, when the gain is increased, the beamwidth is decreased, which is ideal for the testbed setup, as the antenna was placed in a specific location to receive the illuminator signal.
 
-The physical setup of these antennas for testing comprised of an "Over the Shoulder" geometry whereby the antenna was placed behind a building in the line of sight of the TX signal (in this case Mt Cootha). For a single channel / antenna PBR setup, this geometry works to attenuate the direct path signal, and allow for the reflection to be better received by the antenna. 
+The physical setup of these antennas for testing comprised of an "Over the Shoulder" geometry whereby the antenna was placed behind a building in the line of sight of the TX signal (in this case Mt Cootha). For a single channel / antenna PBR setup, this geometry works to attenuate the direct path signal, and allow for the reflection to be better received by the antenna. The resulting attenuation of the direct signal from the geometry can be estimated around \textbf{ -10dB} based on previous studies \cite{GeometryAttenuation}.
+
 
 \begin{figure}[htbp]
     \centering
@@ -130,6 +130,8 @@ The physical setup of these antennas for testing comprised of an "Over the Shoul
     \caption{Geometry of Over the Shoulder Antenna Placement}
     \label{fig:overTheShoulder}
 \end{figure}
+
+
 
 \subsubsection{Antenna Verification and Testing Requirements}
 It was necessary to have a range of hardware verification tests to ensure the antenna was functioning correctly and to quantify the signal strength of the illuminator signal. The following steps were taken to test the signal strength of the illuminator signal, and are discussed in the results section:
@@ -197,15 +199,55 @@ Once the first phase of the testbed verification was completed, the next step wa
     \label{fig:processingChain}
 \end{figure}
 
+Based on the windowing of \textbf{500k} samples, the theoretical maximum detection range of the system can be calculated. Given a default sample rate of 2.048MHz, the range resolution is calculated as follows: 
+
+\[
+R_{\text{max}} = \frac{c \times N}{2 \times f_s}
+\]
+
+\[
+R_{\text{max}} = \frac{3 \times 10^8 \, \text{m/s} \times 500,000}{2 \times 2.048 \times 10^6 \, \text{Hz}}
+\]
+
+\[
+R_{\text{max}} \approx \frac{1.5 \times 10^{14}}{4.096 \times 10^6} \approx 36.6 \, \text{km}
+\]
+
+Thus, the theoretical maximum detection range is approximately \( 36.6 \, \text{km} \). However, this is a theoretical maximum, and without the use of filtering and clutter supression, the actual detection range will be much less. Furthemore, the actual detection range is also influenced by factors such as TX/RX geometry along with the other geographical factors \cite{DTSO2009}. The actual range, known as the dynamic range, is dependent on on relative position of receiver, target and transmitter as shown by Hughes in \ref{fig:geometry} \cite{FundamentalsPassiveRadar}.
+
+
+
 \subsection{Selection of Illuminator Signal}
 The illuminator of opportunity primarily explored for this project is the DAB+ signal, and the target signal will be aerial vehicles - most likely in the form of civillian passenger jets. The DAB+ signal is a good option due to its high power density, and its relatively high bandwidth, which can be used to improve the radar's resolution and ability to distinguish between targets and clutter. Moreover, the geographical proximity of a DAB+ transmitter at Mt Cootha to the University of Queensland, St Lucia campus, making it a potentially ideal choice for the project. Another prospective digital illuminator signal is DVB-T (digital video broadcast - terrestrial), which is similar in its digital modulation to DAB, but provides increased bandwidth and signal power \cite{DVBsignal}.
 
 \subsection{Sampling Rate and Bandwidth}
-Fundamentally, the LimeSDR supports much higher sampling rates and bandwidths than the RTL-SDR, with the LimeSDR having a maximum sampling rate of 61.44MHz compared to the RTL-SDR which has a maximum sampling rate of 3.2MHz. This difference in sampling rate and bandwidth has a direct impact on the range resolution of the radar system, with the LimeSDR being able to achieve much higher range resolution than the RTL-SDR. The sampling rate and bandwidth of the SDR modules were tested and compared, with the results discussed in the results section.
+Fundamentally, the LimeSDR supports much higher sampling rates and bandwidths than the RTL-SDR, with the LimeSDR having a maximum sampling rate of 61.44MHz compared to the RTL-SDR which has a maximum sampling rate of 3.2MHz. This difference in sampling rate and bandwidth has a direct impact on the range resolution of the radar system, with the LimeSDR being able to achieve much better range resolution than the RTL-SDR. The range resolution is dictated by the sampling rate (therefore bandwidth) according to the below:
+
+\[
+\Delta R = \frac{c}{2B}
+\]
+
+where:
+\begin{itemize}
+    \item \( \Delta R \): Range resolution (meters)
+    \item \( c \): Speed of light (\(3 \times 10^8 \, \text{m/s}\))
+    \item \( B \): Signal bandwidth (Hz) - DAB 1.536 MHz, DVB-T 7.5 MHz
+\end{itemize}
+
+The sampling rate and bandwidth of the SDR modules were tested and compared, with the results discussed in the results section. Based on the above equation, when sampling with a DVB-T signal / higher sampling rate the range resolution is improved, which is a key metric for the detection of aerial vehicles. The range resolution for each illuminator was:
+
+\begin{itemize}
+    \item \textbf{DAB+ Signal:} \( \Delta R = \frac{3 \times 10^8}{2 \times 1.536 \times 10^6} = 97.65625 \, \text{meters}\) - with IQ oversampling of 2.048Mhz, the range resolution is 73.2m.
+    \item \textbf{DVB-T Signal:} \( \Delta R = \frac{3 \times 10^8}{2 \times 7.5 \times 10^6} = 20 \, \text{meters}\)
+\end{itemize}
 
 \subsection{Method for Testing and Comparing LimeSDR and RTL-SDR}
 Both SDRs were connected to the RPi5 testbed and were used to receive the same digital broadcast signal. The received signals were then processed using the same DSP algorithms, and the results were compared. The following steps were taken to test and compare the LimeSDR and RTL-SDR:
 
+\begin{itemize} 
+    \item \textbf{RTL-SDR} Utilise the RTL-SDR to sample DAB+ 9A, in the algorithm, as seen in the block diagram \ref{fig:processingChain}, the fmap step size was varied to determine the optimal range resolution.
+    \item \textbf{LimeSDR} Centered around DAB multiplex 9A, a range of sampling frequencies were applied: 2000MHz, 4000MHz, 80000Mhz - and then also experiment with a DVB-T signal of 177.5Mhz (channel 7 Brisbane). It is assumed that the DVB-T signal will provide a better range resolution, and thus better target detection.
+\end{itemize}
 
 
 

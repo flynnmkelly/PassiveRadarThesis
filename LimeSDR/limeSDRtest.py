@@ -7,99 +7,96 @@ from SoapySDR import SOAPY_SDR_RX, SOAPY_SDR_CS16
 
 # ########################################################################################
 # # Settings
-# ########################################################################################
-# # Data transfer settings
-# rx_chan = 0               # RX1 = 0, RX2 = 1 - Using the RX1 Wideband
-#                # Number of complex samples per transfer
-# fs = 2000000             # Radio sample Rate
-# N = fs * 15  
-# freq = 202.928e6              # LO tuning frequency in Hz freq = 177.5e6- DAB 9A --> DVB-T = 177.5e6
-# #req = 177.5e6
-# use_agc = False         # Use or don't use the AGC
-# timeout_us = int(5e6)
+# Data transfer settings
+rx_chan = 0               # RX1 = 0, RX2 = 1 - Using the RX1 Wideband
+               # Number of complex samples per transfer
+#fs = 2048000             # Radio sample Rate
+fs = 8000000             # DVB
+N = fs * 10  
+# freq = 202.298e6              # LO tuning frequency in Hz freq = 177.5e6- DAB 9A --> DVB-T = 177.5e6
+freq = 177.5e6
+use_agc = False         # Use or don't use the AGC
+timeout_us = int(5e6)
 
-# # Recording Settings
-# cplx_samples_per_file = N  # Complex samples per file
-# nfiles = 1              # Number of files to record
-# rec_dir = '/Users/flynnmkelly/Desktop/Thesis/PassiveRadarThesis/LimeSDR'  # Location of drive for recording
-# file_prefix = 'Lime_2Ms_Flight3'   # File prefix for each file
-
-
-# ########################################################################################
-# # Receive Signal
-# ########################################################################################
-# # File calculations and checks
-# cplx_samples_per_file = N   # Use entire buffer size for one file
-# real_samples_per_file = 2 * cplx_samples_per_file
-
-# # Initialize the LimeSDR receiver
-# sdr = SoapySDR.Device(dict(driver="lime"))
-# print(sdr.listSensors())  # Print sensor information
-
-# sdr.setSampleRate(SOAPY_SDR_RX, 0, fs)          # Set sample rate
-# # Set gain mode to manual since AGC is not supported
-# sdr.setGainMode(SOAPY_SDR_RX, 0, use_agc)  # Set to False to use manual gain
-# # SET THE GAIN HERE
-# lna_gain = 30  # Adjust this value based on your signal strength
-# sdr.setGain(SOAPY_SDR_RX, 0, "LNA", lna_gain)  # Set the gain for the selected channel
-# # SET THE GAIN HERE
-# lna_gain = 30  # Adjust this value based on your signal strength
-# sdr.setGain(SOAPY_SDR_RX, 0, "LNA", lna_gain)  # Set the gain for the selected channel
-# pga_gain = 20
-# sdr.setGain(SOAPY_SDR_RX, 0, "PGA", pga_gain)
-# tia_gain = 20
-# sdr.setGain(SOAPY_SDR_RX, 0, "TIA", tia_gain)
+# Recording Settings
+cplx_samples_per_file = N  # Complex samples per file
+nfiles = 1              # Number of files to record
+rec_dir = '/Users/flynnmkelly/Desktop/Thesis/PassiveRadarThesis/LimeSDR'  # Location of drive for recording
+file_prefix = 'Lime_Test_DVBf3Rex'   # File prefix for each file
 
 
-# sdr.setFrequency(SOAPY_SDR_RX, 0, freq)         # Tune to DAB frequency
+########################################################################################
+# Receive Signal
+########################################################################################
+# File calculations and checks
+cplx_samples_per_file = N   # Use entire buffer size for one file
+real_samples_per_file = 2 * cplx_samples_per_file
+
+# Initialize the LimeSDR receiver
+sdr = SoapySDR.Device(dict(driver="lime"))
+print(sdr.listSensors())  # Print sensor information
+
+sdr.setSampleRate(SOAPY_SDR_RX, 0, fs)          # Set sample rate
+# Set gain mode to manual since AGC is not supported
+sdr.setGainMode(SOAPY_SDR_RX, 0, use_agc)  # Set to False to use manual gain
+# SET THE GAIN HERE
+lna_gain = 25  # Adjust this value based on your signal strength
+sdr.setGain(SOAPY_SDR_RX, 0, "LNA", lna_gain)  # Set the gain for the selected channel
+pga_gain = 15
+sdr.setGain(SOAPY_SDR_RX, 0, "PGA", pga_gain)
+tia_gain = 0
+sdr.setGain(SOAPY_SDR_RX, 0, "TIA", tia_gain)
 
 
-# print('Configuration complete')
+sdr.setFrequency(SOAPY_SDR_RX, 0, freq)         # Tune to DAB frequency
 
-# # Create data buffer and start streaming
-# rx_buff = np.empty(2 * N, np.int16)  # Buffer for data
-# rx_stream = sdr.setupStream(SOAPY_SDR_RX, SOAPY_SDR_CS16, [rx_chan]) # Setup data stream
-# sdr.activateStream(rx_stream)  # Start streaming
 
-# print('Streaming started')
+print('Configuration complete')
 
-# # Record the data
-# sr = sdr.readStream(rx_stream, [rx_buff], N, timeoutUs=timeout_us)
-# rc = sr.ret
-# assert rc == N, 'Error Reading Samples from Device (error code = %d)!' % rc
+# Create data buffer and start streaming
+rx_buff = np.empty(2 * N, np.int16)  # Buffer for data
+rx_stream = sdr.setupStream(SOAPY_SDR_RX, SOAPY_SDR_CS16, [rx_chan]) # Setup data stream
+sdr.activateStream(rx_stream)  # Start streaming
 
-# # Save data to file
-# file_name = os.path.join(rec_dir, '{}.bin'.format(file_prefix))
-# rx_buff.tofile(file_name)
+print('Streaming started')
 
-# print('Gets to end')
+# Record the data
+sr = sdr.readStream(rx_stream, [rx_buff], N, timeoutUs=timeout_us)
+rc = sr.ret
+assert rc == N, 'Error Reading Samples from Device (error code = %d)!' % rc
 
-# # Stop streaming and close connection
-# sdr.deactivateStream(rx_stream)
-# sdr.closeStream(rx_stream)
+# Save data to file
+file_name = os.path.join(rec_dir, '{}.bin'.format(file_prefix))
+rx_buff.tofile(file_name)
 
-# ########################################################################################
-# # Plot Power Spectral Density (PSD)
-# ########################################################################################
-# import numpy as np
-# import matplotlib.pyplot as plt
-# from scipy.signal import welch
+print('Gets to end')
 
-# # Helper Function (reads in complex 16-bit IQ data)
-# def read_complex_int16(filename, MAX_SAMPLES=-1):
-#     # Load SDR data from a 16-bit I/Q file
-#     # Normalise the data to [-1, 1] and return as a complex array
-#     data = np.fromfile(filename, dtype=np.dtype('<h'), count=MAX_SAMPLES*2)
+# Stop streaming and close connection
+sdr.deactivateStream(rx_stream)
+sdr.closeStream(rx_stream)
+
+########################################################################################
+# Plot Power Spectral Density (PSD)
+########################################################################################
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import welch
+
+# Helper Function (reads in complex 16-bit IQ data)
+def read_complex_int16(filename, MAX_SAMPLES=-1):
+    # Load SDR data from a 16-bit I/Q file
+    # Normalise the data to [-1, 1] and return as a complex array
+    data = np.fromfile(filename, dtype=np.dtype('<h'), count=MAX_SAMPLES*2)
     
-#     # Normalize the data to [-1, 1]
-#     normdata = data.astype(float) / 32768.0
+    # Normalize the data to [-1, 1]
+    normdata = data.astype(float) / 32768.0
     
-#     # Convert to complex
-#     complex_data = normdata[::2] + 1j * normdata[1::2]
+    # Convert to complex
+    complex_data = normdata[::2] + 1j * normdata[1::2]
     
-#     return complex_data
+    return complex_data
 
-##################################
+#################################
 
 # Main Code to Read Data and Plot PSD
 file_name = 'LimeSampleFile.bin'  # Specify your file name here
@@ -119,8 +116,8 @@ def read_complex_int16(filename, MAX_SAMPLES=-1):
 
 
 # Read complex data from the file
-complex_data = read_complex_int16(file_name)
-print(complex_data)
+# complex_data = read_complex_int16(file_name)
+# print(complex_data)
 
 def plot_psd(filename, sampling_rate, nperseg):
     # Read the binary file
@@ -143,7 +140,7 @@ def plot_psd(filename, sampling_rate, nperseg):
     plt.show()
 
 # Plot the PSD 
-plot_psd(file_name, fs, 2048)
+# plot_psd(file_name, fs, 2048)
 
 # # Compute the power spectral density
 # f, Pxx = welch(complex_data, fs, nperseg=2048)

@@ -147,7 +147,6 @@ The above table highlights some key differences in broadcast signals, potential 
 
 
 \section{Range Doppler Mapping}
-\todo[inline]{DISCUSS RANGE AND FMAP scope}
 Range doppler mapping is a technique used to determine the distance and relative velocity of targets by analyzing the frequency shift (Doppler shift) and time delay of the received signals after they are reflected off the targets. The signal response of a target at a particular range and velocity can be predicted by the ambiguity function seen in equation \ref*{eq:ambiguity} \cite{INTRO2017}. 
 \begin{equation}
     \chi(\tau, f) = \int s_{\text{reference}}(t) s_{\text{received}}^*(t - \tau) e^{j2\pi f t} \, dt \label{eq:ambiguity}
@@ -186,7 +185,7 @@ Where:
     \label{fig:rangeDoppler}
 \end{figure}
 
-\todo[inline]{Should i use a better RDM??}
+
 \par  
 \noindent In the case of this project, the time delay will be utilised to calculate the bistatic range (x axis) and the Doppler shift will be used to calculate the relative velocity of the target (y axis). In summary, ambiguity function and subequent range doppler mapping will be vital for mapping the DAB+ signal characteristics for given geometry and motion of the surveilled target. \todo{MORE DETAIL}
 
@@ -234,7 +233,7 @@ Quite simply defined by the IEEE as \textit{That part of a transmitting or recei
 \begin{enumerate}
     \item \textbf{Radiation Pattern}: This describes the angular variation in radiation at constant distances from the antenna. The radiation pattern depends on the signal strength and is categorized into three main types: Isotropic, Directional, and Omnidirectional.
     
-    \item \textbf{Directivity}: Defined as the ratio of the power density in the direction of the pattern's maximum to the average power density at the same distance from the antenna.
+    \item \textbf{Directivity}: Defined as the ratio of the power density in the direction of the pattern's maximum to the average power density at the same distance from the antenna. This can be measured through front to back ratio (dB), how well can antenna block signals from the rear.
     
     \item \textbf{Gain}: Closely related to directivity but includes losses. Gain is defined as the directivity minus any losses experienced by the antenna.
     
@@ -252,8 +251,7 @@ As with considering the SDR module, the cost versus performance trade-off is als
 
 
 \section{Digital Signal Processing}
-\todo[inline]{Bandwidth RDM and clutter suppression} 
-Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \todo{batches citation needed}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. Fundamentally, the single channel version of this correlation is the direct signal (given its strength) compared with a time lagged version of itself given the refelection from the target, as reflected in \ref{eq:ambiguity}. Mahfoudia, et al. demonstrate the methodology behind single channel correlation and reconstruction with a DVB-T illuminator, combined with clutter suppression techniques \cite{singleChannel}.
+Broadly, the goal of the signal processing for general passive bistatic radar is to extract a range doppler map from a received signal. Obtaining a range doppler map involves a few steps, with specifics depending on the IOO chosen along with number of sampling channels. Furthermore, there is the option of autocorrelating these signals via correlation integrals which is the most time and compute intense, or through Batches algorithm in the frequency domain \cite{IOTpassiveRadar}. Prior to the advent of of digital broadcasts, analague broadcast processing involved comprehensive filtering and synchronisation of at least two input channels\cite{DSPfm}. However, more recently, given the nature of DAB / DVB-T and its COFDM modulation, filtering and synchronisation can be replaced with reconstruction of the surveillance signal \cite{DSPdab}, replacing the need for dual channel configuration. Fundamentally, the single channel version of this correlation is the direct signal (given its strength) compared with a time lagged version of itself given the refelection from the target, as reflected in \ref{eq:ambiguity}. Mahfoudia, et al. demonstrate the methodology behind single channel correlation and reconstruction with a DVB-T illuminator, combined with clutter suppression techniques \cite{singleChannel}. For radar systems, as opposed to communication systems, the contents and packet structure of the signal is not necessarily relevant, rather the similarities of signals \ref{eq:ambiguity}.
 
 
 The simplest, yet probably most computationally intense method of processing the doppler map is via traditional FFT-based correlation. It works by correlating large portions of the signal in time and frequency domains, with doppler shifts applied, creating frequency bins which are used to correlate with the received signal in the frequency domain, thereby obtaining any doppler shift experienced by the target. As for the time domain, the range estimates of a target can be obtained by taking the inverse fast fourier transform (IFFT) of the correlated signal in the frequency domain, providing the relevant time delay (and therefore range). The process can be repeated over multiple windows of a given signal and then combined to create a range doppler map \cite{FFTcorrelation}.

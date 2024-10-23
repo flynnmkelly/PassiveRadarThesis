@@ -29,8 +29,10 @@ def read_complex_int16(filename, MAX_SAMPLES=-1):
     return complex_data
 
 # Load data
-filename = 'Lime_2Ms_Flight1.bin' # target?
-GIFsaveName = 'Flight1_2_MSs.gif'
+filename = 'Lime_2Ms_highGain.bin' # target?
+GIFsaveName = 'LimeDABHighGain.gif'
+sampleRate = '2MS/s'
+titleName = 'LimeSDR Flight 2 RDMAP DAB High Gain: ' + sampleRate 
 window_size = 500000  # 500k samples
 overlap_fraction = 0.16  # 20% overlap-
 overlap_size = int(window_size * overlap_fraction)
@@ -45,7 +47,7 @@ nn = windows[0] #default set to first window
  
 bs = 256  # batch size
 ## OVERLAP NEEDS TO BE DIFFERENT FOR DIFFERENT SAMPLE DATE
-overlap = 200  # corresponds to maximum timeshift - TRUNCATION VALUE 
+overlap = 128  # corresponds to maximum timeshift - TRUNCATION VALUE 
 # 128 samples delay at 2.048 MHz is 62.5us -> distance of 18.75km
 nbatches = int(np.floor((len(nn)-overlap)/bs))
 # Now can process 'windows' which is an array of data windows
@@ -60,7 +62,7 @@ fig, ax = plt.subplots()  # Set up the plotting figure and axis
 images = []  # List to store each image plot
 
 # Process each window and create plot data
-for i, nn in enumerate(windows[0:10]):
+for i, nn in enumerate(windows[10:15]):
 
     fig = Figure(figsize=(8, 6))  # Adjust size as needed
     canvas = FigureCanvasAgg(fig)
@@ -75,14 +77,14 @@ for i, nn in enumerate(windows[0:10]):
         rdmapX[fi, :] = np.fft.ifft(np.fft.fft(nnf) * nn2F)
 
     rdmapXTRUNC = np.abs(rdmapX[:, 1:overlap])
-    print(f"Truncated Range Doppler Data: {rdmapXTRUNC[:, 1:5]}")
+   
     
     ## DATA STUFFFF
     #Skip the zero range column - SHOW LOG10 of data np.log10
-    image = ax.imshow(np.log10(rdmapXTRUNC), extent=[0, overlap, np.min(fmap), np.max(fmap)], aspect='auto')
-    ax.set_xlabel('Range (samples)')
+    image = ax.imshow(np.log10(rdmapXTRUNC), extent=[1, overlap, np.max(fmap), np.min(fmap)], aspect='auto')
+    ax.set_xlabel('Range (samples) at: ' + sampleRate)
     ax.set_ylabel('Doppler (Hz)')
-    ax.set_title(f"Window {i+1}")
+    ax.set_title(titleName + f" Window {i+1}")
 
     # Convert plot to image
     canvas.draw()

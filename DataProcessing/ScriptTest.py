@@ -21,9 +21,9 @@ def read_complex_byte(filename, MAX_SAMPLES=-1):
     return normdata
 
 # Input Output Results
-filename = 'qatarAcrossPi.bin' # target?
-titleName = 'QTR898 RTL Pi Sampled'
-GIFsaveName = 'Qatar Airways Acrosss.gif'
+filename = 'tues17flight1GoodData.bin' # target?
+titleName = 'First Good Flight Data: FMap Step 2 No Log Data'
+GIFsaveName = 'FirstGoodFlightDopplerStep2NoLog.gif'
 
 
 window_size = 500000  # 500k samples
@@ -60,7 +60,7 @@ for i, nn in enumerate(windows):
     canvas = FigureCanvasAgg(fig)
     ax = fig.add_subplot(111)
 
-    fmap = np.arange(-(bs * 0.3), bs * 0.3, 0.5)
+    fmap = np.arange(-(bs * 0.3), (bs * 0.3), 2)
     rdmapX = np.zeros((len(fmap), len(nn)), dtype=complex)
     nn2F = np.conj(np.fft.fft(nn))
 
@@ -68,12 +68,12 @@ for i, nn in enumerate(windows):
         nnf = nn * np.exp(1j * 2 * np.pi * -f * t)
         rdmapX[fi, :] = np.fft.ifft(np.fft.fft(nnf) * nn2F)
 
-    rdmapXTRUNC = np.abs(rdmapX[:, 1:overlap])
-    # print(f"Truncated Range Doppler Data: {rdmapXTRUNC[:, 1:5]}")
+    rdmapXTRUNC = np.abs(rdmapX[:, 1:overlap]) # 
+
     
     ## DATA STUFFFF
     #Skip the zero range column - SHOW LOG10 of data np.log10
-    image = ax.imshow(np.log10(rdmapXTRUNC), extent=[1, overlap, np.min(fmap), np.max(fmap)], aspect='auto')
+    image = ax.imshow(rdmapXTRUNC, extent=[1, overlap, np.max(fmap), np.min(fmap)], aspect='auto')
     ax.set_xlabel('Range (samples)')
     ax.set_ylabel('Doppler (Hz)')
     ax.set_title(f"{titleName} Window {i+1} of {len(windows)}")

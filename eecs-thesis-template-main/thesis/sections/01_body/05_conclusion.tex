@@ -1,9 +1,36 @@
 \chapter{Conclusion \label{sec:conclusion}}
-\todo[inline]{Conclusion: what conclusions can be drawn from the results of your research?}
 
-\section{Summary \& Conclusions \label{sec:summary}}
+
+\section{Summary \label{sec:summary}}
+This thesis has explored the design and implementation of a low cost embedded passive bistatic radar detection testbed system. The testbed was built off theory and results from a range of existing studies and products aiming to provide a proof of concept for FFT based passive radar detection on low cost single board computers. The testbed was evaluated both successfully and unsuccessfully via two different SDR moules, RTL-SDR and LimeSDR, with the RTL-SDR module providing the best results. The detection processing time frames of the testbed were also compared against a high power PC. While the design of this thesis is not a complete passive radar detection system with angle of arrival and real time processing, it provides a solid foundation for future extrapolation and development. 
+\par \vspace{0.2cm}
+The design has also demonstrated the proliferation and feasibility of low cost embedded passive radar detection systems, with the cost totalling at approximately \$330 AUD, along with a focus of usability and simple design. This is reflective of a higher level trend of increasing compute and decreasing cost of associated technologies ranging from SBC to SDR hardware. 
 
 \section{Limitations \label{sec: limitations}}
+Across the design and implementation of the passive bistatic radar testbed, there were some inherent and applied limitations to the design and research conducted, summarised in the following points:
+\begin{itemize}
+    \item Given the selection of a single channel antenna configuraiton, any potential test location required blocking of direct line of sight to IoO transmitter \ref{fig:overTheShoulder}, in order to prevent direct signal interference.
+    \item The use of a single RX channel also limited the potential for multistatic detection, with the testbed only capable of bistatic detection, subsequently limiting the potential for angle of arrival detection. 
+    \item Due to inherently low target signal to noise ratio and lack of extensive clutter suppresion, the testbed was limited to detecting only large, relatively near targets. As opposed to extensive functionality such as target classification or tracking.
+    \item Whilst there being much potential for extension of real time functionality via batches algorithm, the testbed utilised FFT based correlation detection, which prevented real time RDMap processing. 
+    \item The testbed configuration was limited to use based on relatively high power, wide bandwidth terrestrial digital signals such as DAB+ and DVB-T, with no testing conducted on other illuminators of opportunity, such as satellite signals or analogue signals.
+\end{itemize}
+
+These limitations come as a result on optimising the testbed design and implementation for low cost, user friendly, and scaleable passive radar detection, with the intention of providing a proof of concept for future development. Moreover, there is an abundance of literature and even commercial products that have addressed these limitations, with the intention of providing a more complete passive radar detection system.
 
 
 \section{Possible Future Work \label{sec:future_work}}
+In light of the research and demonstrated proof of concept of this thesis, several reccomendations and areas for future work have been identified, both in terms of broad passive bistatic radar and low cost implementations. In terms of low cost implementations and test bed, the logical next steps would be to build off the stated project limitations.
+\par
+The primary development would be the development and processing of another channel/(s) for multistatic detection, allowing for angle of arrival detection and potentially target tracking. This would require the development of a second RX channel, along with the associated signal processing and detection algorithms, akin to the KrakenSDR product \cite{KrakenSDR}, or could potentially even involve the integration of the Kraken into the RPi5 testbed itself.
+\par
+Another route of development would be the exploration of real time processing and detection algorithms, such as the Batches algorithm, which represent a lower computational intensity than the FFT based correlation detection used in this thesis \cite{IOTpassiveRadar}. Associated with this development would be the possible use of lower compute and subsequently lower cost platforms. 
+\par
+Finally, cluster suppression algorithms could be implemented and even developed to allow for the detection of smaller, further away targets, along with the potential for target classification. This has been shown previously through the implementation of BMS, GMS and CFAR \cite{ZhangClutter}. Noting that these methods are computationally intensive and more signal processing focused as opposed to hardware focused.
+\par 
+Along with the above specific potential development areas, some other general extensions based on the research and design of this thesis include:
+\begin{itemize}
+    \item Development of a simple, generic SDR sampling software library / gui to unify the process of obtaining IQ samples in the form of a .bin file.
+    \item Exploration of software to automate the RDMap generation process taking params such as sample rate and the .bin file as inputs.
+    \item Addition of LCD display to testbed for localised data visualisation and control.
+\end{itemize}

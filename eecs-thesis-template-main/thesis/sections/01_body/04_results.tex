@@ -166,7 +166,7 @@ Other than some configuration changes, the processing scripts for M1 Mac and the
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.6\textwidth]{timeComparison.png}
+    \includegraphics[width=0.75\textwidth]{timeComparison.png}
     \caption{Processing Time Comparison}
     \label{fig:processingTime}
 \end{figure}
@@ -188,8 +188,104 @@ Fusion 360 was used to design the case, and the STL files were then 3D printed. 
 
 
 \section{RTL-SDR vs LimeSDR Detection Comparison \label{sec:SDRcomparison}}
+RTL-SDR detection was performed via the testbed first and yielded successful detection results despite lack of clutter suppression and zero doppler cancellation. LimeSDR range doppler mapping was attempted unsuccessfully due to presence of overwhelming zero doppler clutter. 
+
+\subsection*{RTL-SDR Detection}
+Firstly, the FFT algorithm was conducted on 15 seconds of RTL-SDR data, with the DAB signal at 202.928 MHz. The first specific flight was QF936, a Boeing737 on 7 October 2024. The flight path and range doppler maps are shown in Figure \ref{fig:QF936}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{firstGoodFlight.png}
+    \caption{QF936 Flight Path \cite{flightradar24}}
+    \label{fig:QF936}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.99\textwidth]{RangeDopplerGoodFlight1.jpeg}
+    \caption{FFT Method Range Doppler Output: Frequency Bin Step Size Comparison}
+    \label{fig:RDM1}
+\end{figure}
+
+The GIFs of the detection over the space of 97 windows, and can be viewed in further detail in the appendix \ref{sec:codeResults}. In terms of understanding the range doppler map, detection at around the 25th sample bin refects a detection range of approximately 1.8km, which is consistent with the flight path of QF936. Furthemore, the doppler shifts from postive (moving towards the receiver) to negative (moving away from the receiver) at around the 50th sample bin, which is consistent with the flight path of QF936. The signal was sampled as tested in Section \ref{sec:sdrVerification}, with a sample rate of 2.048 MS/s, and a centre frequency of 202.928 MHz, using the automated gain control (AGC) of the RTL-SDR.
+
+\subsection*{LimeSDR Detection}
+In the same test location, a range of samples were taken of passing targets on the LimeSDR, starting with a sample rate of 2000Mhz, the below range doppler map was generated in Figure \ref{fig:RDM2}. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.89\textwidth]{LimeSDRdabLow.png}
+    \caption{LimeSDR Medium Gain Range Doppler Output: Noisy Clutter}
+    \label{fig:RDM2}
+\end{figure}
+
+The horizontal noise bands indicate a significant amount of zero doppler clutter, which is interesitng given the RTL-SDR did not have this issue. The LimeSDR was configured using an LNA gain of 20dB, and a PGA gain of 5dB. The gain was increased when attempting to detect a target to no avail, with the range doppler map in Figure \ref{fig:RDMLimeHighGain}. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.69\textwidth]{LimeSDRdabHigh.png}
+    \caption{LimeSDR DAB High Gain Range Doppler Output: Noisy Clutter}
+    \label{fig:RDMLimeHighGain}
+\end{figure}
+
+Despite being in the same location, the SNR of the LimeSDR was significantly lower than the RTL-SDR, which can potentially be attributed to the lack of AGC. A different illuminator signal was then utilised (DVB-T 177.5MHz), along with a higher sampling rate (bandwidth) of 8000Mhz, and the range doppler map in Figure \ref{fig:RDMLimeDVB} was generated.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.69\textwidth]{DVBtLimeFlight1.png}
+    \caption{LimeSDR Medium Gain Range Doppler DVB-T}
+    \label{fig:RDMLimeDVB}
+\end{figure}
+
+Whilst still not being able to effectively detect passing aerial targets from the same locatiion as the RTL-SDR, the generated range doppler map in Figure \ref{fig:RDMLimeDVB} shows more expected features such as clutter around the zero range as expected with autocorellation. 
+
 
 \section{Overall Design Cost}
+The functioning test bed can broadly be broken down into the following components and their costs, with the only variance being the cost of the SDR module. The resulting cost: 
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item Raspberry Pi5 (8GB RAM): \$135 \cite{core_electronics_rpi5}
+        \item Pimoroni NVME Base: \$40 \cite{pimoroni_nvme_base}
+        \item NVME Compatible SSD: \$30 
+        \item RTL-SDR: \$30 \cite{RTLSDRchipSet}
+        \item User Buttons: \$10
+        \item Custom Case PLA: \$5 
+        \item VHF / UHF Yagi Antenna: \$80 \cite{AntennaPiece}
+        \item LimeSDR USB 3.0 (no longer retail): \$550 AUD \cite{limesdr_usb}
+    \end{itemize}
+\end{multicols}
+
+The image below shows the final testbed, with the LimeSDR and the RTL-SDR connected to the RPi5.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{testBedFinal.jpeg}
+    \caption{Final Testbed}
+    \label{fig:finalTestbed}
+\end{figure}
+
+This resulted in a final cost for each of the configurations:
+% listed options 1 and 2
+\begin{enumerate}
+    \item RTL-SDR Configuration: \$330
+    \item LimeSDR Configuration: \$850
+\end{enumerate}
+
 
 \section{Comparison to Existing Work}
-% DISCUSS INTEGRATION INTO FLIGHT RADAR 24, etc
+To examine the implementation of the testbed along with its SDR/bandwidth comparison, it was necessary to compare it to pre-existing work. The closest work to the testbed was the work conducted by Moser et. al \cite{IOTpassiveRadar} as seen in the literature review \ref{sec:lowCostIOT}, which utilised a Raspberry Pi 3 and an RTL-SDR to detect DAB signals. The work conducted by Moser et. al was a proof of concept, and the testbed developed in this thesis was a more user friendly, scaleable version of the same concept. Analsyis and comparison of these results and that of Moser et al. (the Moser study) inclue:
+
+% List of comparisons
+\begin{itemize}
+    \item \textbf{Hardware} Both projects utilised Raspberry Pi, with this project using the latest and updated Model. This project extended the Moser study via the addition of a higher level and cost LimeSDR. Overall, this study slightly higher in cost due to updated Pi and testbed additions such as higher speed NVME base. 
+    \item \textbf{Illuminator Signal} The Moser study explored both anlaogue FM along with DAB, this study focused on digital signals only, similarly with a single channel setup. 
+    \item \textbf{Signal Processing} This study did not focus on optimising already existing autocorrelation algorithms, rather demonstrating the ability to detect the signal with the RTL-SDR and LimeSDR. Moser was able to show real time detection on the Rpi3 via the batch algorithm, which based on extrapolation would be possible on the Rpi5. The utilisation of a single channel configuration saved a lot of the synchronisation and matched filtering required for the FM multichannel configuration. The compute of the fourier transform correlation method was actually larger than that of Moser, wiht the Batch implementation. Interestingly, Moser provided a real time threshold value for computations, demonstrating the ability to exceed this with the Rpi3 and batch algorithm, even demonstrating potential for additional CFAR processing.
+    \item \textbf{Detection} Both studies demonstrate successful detection, however the Moser study provides a third axis on the colourless range doppler map, highlighting the signal dBFS (relative to full scale). The Moser study applied some filtering which slightly reduced noise, probably comparible to the zero range bin removal of this study. 
+\end{itemize}
+
+Overall, despite differences in result comparison, noticeably the Moser study emphasing hardware compute modules, and this study looking at different SDR modules. The Moser study provided a good benchmark for the capabilities of low cost IoT hardware in PBR applications, allowing this study to further the proof of concept with modernised hardware around a similar price tag. Both show that for sub \$300 USD, a passive radar detection system can be implemented, a range of signals can be utilised, and aerial targets can quite easily be detected with minimal additional processing.
+
+% KRAKEN SDR COMPARISON
+The next logical comparison is with both clutter suppression implementations and angle of arrival detection implementations. The KrakenSDR ecosystem is an example of full suite (close to) passive radar utilising five RTL-SDR tuners, with built in synchronisation. This off the shelf product (essentially a setup) comes with the preloaded open source API's preconfigured, and retails for approximately \$500usd \cite{KrakenSDR}.
+\par With clutter evidently present in \ref{fig:RDM1}, another comparison can be made with the work of Zhang et. al \cite{ZhangClutter}, who implemented a range of clutter suppression algorithms such as BMS, GMS and CFAR. The work of Zhang et. al was able to detect smaller, further away targets, along with multiple targets in the space of one sample window.
