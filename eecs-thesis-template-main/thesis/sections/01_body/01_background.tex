@@ -66,8 +66,6 @@ Where:
 \par \vspace{0.5cm}
 \noindent The denominator of the bistatic radar equation includes the term \( \frac{1}{R_T^2 R_R^2} \).This term implies that with omnidirectional antenna patterns, the contours of constant signal-to-noise ratio (SNR) are described by the equation \( R_T R_R = \text{constant} \), which represents Ovals of Cassini. These ovals represent the locations in a given PBR co-ordinate sytem where the distances from the target to the transmitter and receiver remain the same. In the case of directional antennas, these contours are altered. Moreover, the signal-to-noise ratio is minimized when the target is equidistant from the transmitter and receiver (\( R_T = R_R \)), and maximized when the target is closer to either the transmitter or receiver \cite{FundamentalsPassiveRadar}.
 
-\par \vspace{0.5cm} 
-\todo[inline]{NEED TO MENTION / RESEARCH THE EFFECT OF NOISE AND DECIBELS EXPECTED HERE.}
 
 % -------------------------------------------------
 \section{Illuminators of Opportunity} %add label
@@ -321,6 +319,14 @@ Given that the overall goal of this thesis project is to create a low cost, embe
 
 \subsection{USB Drive Transfer}
 The most basic method of transferring data from an embedded device to a PC is via a USB drive. This method is simple and reliable, and is ideal for applications where the data transfer rate is not critical. The data is saved to a USB drive on the embedded device, and then transferred to a PC for further processing. However, it is not ideal for real-time applications, as the data transfer is limited by proximity and a manual process is required (despite large data storage capabilities).
+
+% Image of Networking Overview
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{networking.jpeg}
+    \caption{Visualisation of Potential Networking Protocols}
+    \label{fig:NetworkingOverview}
+\end{figure}
 
 \subsection{SSH}
 Secure Shell (SSH) is a widely-used method for remotely interfacing with embedded devices and SBC's. It allows users to securely log in to a remote device over a network and issue commands as though they were operating directly on the device. This is particularly useful for headless systems, where the embedded device does not have a monitor or keyboard connected. SSH encrypts all communication, ensuring data security. Once an SSH connection is established between the Raspberry Pi and a PC, tasks such as starting data capture, configuring parameters, or transferring files can be done directly from the PC terminal \cite{SSHOverview}. Many applications use SSH for remote monitoring and control of embedded systems, as well as for viewing the UI of SBC's, for example VNC viewer.
