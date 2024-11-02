@@ -3,7 +3,7 @@
 % CONTENT
 This section will contain a clear definition of the thesis topic, goals, project scope, and relevance of the project. 
 
-\section{Topic and Relevance}
+\section{Topic and Relevance \label{sec:topicRelevance}}
 Passive radar detection technology is a class of radar detection whereby the radar system does not emit any radiation. Instead, it uses existing electromagnetic signals in the environment, such as television or radio broadcasts, to detect and track objects. Passive radar can be bistatic, whereby the transmitter and receiver are separate, or multistatic, where there are multiple receivers. The technology has been around since the early 20th century, but has only recently become feasible due to advances in digital signal processing and computing \cite{INTRO2017}. The technology has a number of advantages over traditional radar systems. It is covert, as it does not emit any radiation, and is therefore difficult to detect and directly jam, leading to a concentrated interest from defence cirlces \cite{DTSO2009}. It is also relatively cheap, as it does not require a dedicated transmitter and hence has less energy consumption. Conversely, it has a number of disadvantages, such as a lower signal-to-noise ratio, and a requirement for a relatively large amount of computational power to process the received signals \cite{INTRO2017}.
 
 \par
@@ -11,7 +11,7 @@ Passive radar detection technology is a class of radar detection whereby the rad
 Bistatic passive radar detection has a wide range of applications centered around situational awareness, including air traffic control, border security, and environmental monitoring. Embedding the passive radar technology is a relatively new field buoyed by recent and increasing developments in computational power on Internet of Things (IoT) devices \cite{IOTpassiveRadar}. Key components and processes of a passive radar RX system include the antenna, the receiver hardware (software defined radio), signal sampling hardware and memory, along with the compute to complete the digital signal processing \cite{FundamentalsPassiveRadar}. Advantages of implementing some or even all of these components in a low cost manner include increased scaleability, portability, and lower reliance on external high cost hardware such as a PC.
 
 
-\section{Aims and Objectives} \label{sec:aims}
+\section{Aims and Objectives \label{sec:aims}}
 To explore the feasibility of a low cost embedded passive bistatic radar detection, and provide a scaleable proof of concept, this thesis aims to provide a user friendly testbed for digital signal based passive radar detection. The work conducted in this thesis and the eventual prototype hopes to decrease the barriers to entry for passive radar detection technology, and provide a platform for further research and development in the field. At a high level, the primary objectives of this thesis project are;
 \begin{enumerate}
     \item Develop an understanding and proof of concept of passive radar detection algorithms on low cost single board computers (SBC) connected to software defined radio (SDR) hardware.
@@ -19,7 +19,7 @@ To explore the feasibility of a low cost embedded passive bistatic radar detecti
     \item Verify the functionality of the low cost embedded passive radar detection system in a controlled environment against higher power computing results, compare the efficacy of different SDR modules and investigate the potential for scaling up to a multistatic system through a network. 
 \end{enumerate}
 
-\section{Scope}
+\section{Scope \label{sec:thesisScope}}
 This thesis focuses on the development of a hardware testbed based on software defined radio (SDR) and single board computer (SBC) technology. The scope of this thesis project is limited to the following:
 
 \begin{itemize}

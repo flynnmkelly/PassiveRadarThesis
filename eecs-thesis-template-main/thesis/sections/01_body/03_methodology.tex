@@ -177,7 +177,7 @@ When utilising SDR modules, it is necessary to have capabilities to perform nece
 
 \begin{itemize}
     \item \textbf{LimeSuite:} LimeSuite is the software that is used to interface with the LimeSDR hardware, and is used to configure the LimeSDR, set the frequency, gain, and bandwidth, and perform other functions \cite{limesdr_usb}. 
-    \item \textbf{SoapySDR:} SoapySDR \cite{soapsdr} is a software abstraction layer that provides a common API for interfacing with a wide range of SDR hardware, including the LimeSDR. SoapySDR provides a simple and consistent API for interfacing with SDR hardware, and is used to communicate with the LimeSDR hardware from the host computer \cite{SoapySDR}. It essentially acts to wrap and unify the LimeSuite and LimeSDR hardware, providing a common interface for the host computer (ideal for porting from testbed to high level mac)
+    \item \textbf{SoapySDR:} SoapySDR \cite{soapsdr} is a software abstraction layer that provides a common API for interfacing with a wide range of SDR hardware, including the LimeSDR. SoapySDR provides a simple and consistent API for interfacing with SDR hardware, and is used to communicate with the LimeSDR hardware from the host computer \cite{soapsdr}. It essentially acts to wrap and unify the LimeSuite and LimeSDR hardware, providing a common interface for the host computer (ideal for porting from testbed to high level mac)
     \item \textbf{Python:} Python was used as an abstract interface, essentially calling the SoapySDR API, again, easily transferable between host computers. 
 \end{itemize}
 

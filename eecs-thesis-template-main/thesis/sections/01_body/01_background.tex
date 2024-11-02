@@ -4,7 +4,7 @@
 This chapter collates the necessary background information for the project, including the fundamentals of passive radar, the use of illuminators of opportunity, range doppler mapping, radio hardware, digital signal processing, IoT architecture, and networking with embedded hardware.
 
 
-\section{Passive Radar Fundamentals}
+\section{Passive Radar Fundamentals \label{sec:passiveRadarFundamentals}}
 The key and unique feature of passive radar is its utilisation of existing illuminators of opportunity, such as television or radio broadcasts, to detect and track objects. The technology has been around since the early 20th century, with modern interest accelerated due to the use of passive radar systems on UHF TV signals and VHF FM radio tranmission systems in the 1980's \cite{FundamentalsPassiveRadar}. Equivalent terms used to describe passive radar include passive coherent location (PCL), and passive covert radar (PCR), parasitic radar, piggyback radar. Specifically, \textit{bistatic} radar refers to the distributed design of the transmitter and receiver, as opposed to classic \textit{monostatic} radar. As reflectd by Figure \ref{fig: topology} below, the turning parabolic of monostatic radar is able to receive both range and bearing of the signal echo, whereas passive bistatic radar measures time delay of the echos from the target, allowing doppler shift from the relative speed of the target to be measured.
 
 \begin{figure}[htbp]
@@ -68,8 +68,8 @@ Where:
 
 
 % -------------------------------------------------
-\section{Illuminators of Opportunity} %add label
-\label{sec:illuminators}
+\section{Illuminators of Opportunity \label{sec:illuminators}} %add label
+
 
 The illuminator of opportunity is the signal that is used to illuminate the target, and is the primary source of the signal that is received by the passive radar system. The illuminator of opportunity can be any signal that is transmitted through the air, such as television radio or even satellite broadcasts, and can be tailored to the specific requirements of the passive radar system. Firstly it is necessary to comprehend the relevant radio frequency spectrum, followed by relevant metrics for passive radar, along with the advantages of digital signals.
 \subsection{Radar and the Radio Frequency Spectrum}
@@ -85,7 +85,7 @@ All wireless digital and analog signals are transmitted via a carrier frequency 
 
 In the context of passive radar, the above three bands are relevant, firstly, due to the sheer volume of broadcast signals across the HF and VHF, representing a continuous source of illumination. Moreover, most of these signals have relatively high transmit power (with transmitters geolocated to facilitate maximum coverage for a given area), enabling clear reflections from targets \cite{DTSO2009}.
 
-\subsection{Key Parameters for Illuminators of Opportunity}
+\subsection{Key Parameters for Illuminators of Opportunity \label{sec:illuminatorParameters}}
 Griffiths and Baker outline the three key paramaters when selecting an illuminator \cite{INTRO2017}:
 \begin{enumerate}[label=\arabic*.]
     \item The \textbf{Power Density} at the target: It refers to the strength of the signal (in Watts per square meter) that reaches the target area from the illuminator. Higher power density can improve detection performance due to a stronger return signal.
@@ -93,7 +93,7 @@ Griffiths and Baker outline the three key paramaters when selecting an illuminat
     \item The \textbf{Coverage}: The spatial area over which the illuminator's signal is spread. Adequate coverage is essential to ensure the target is within the illuminator's effective range. As mentioned above, public broadcast signals are often optimized for a given locality.
 \end{enumerate}
 
-\subsection{Utility of Digital Illuminators}
+\subsection{Utility of Digital Illuminators \label{sec:digitalIlluminators}}
 In general, digital signals are favourable for passive radar due to their large bandwidth, constant envelope and relatively large and stable transmit power. Relevant Australian terrestrial analog signals for use in passive bistatic radar include Amplitude Modulation (AM) radio, Frequency Modulation (FM). Conversely, relevant Australian digital signals include Digital Audio Broadcasting (DAB) and Digital Video Broadcasting (DVB) \cite{DABfeatures}. With DVB-T being similar to DAB with a higher bandwidth and power, potentially resulting in more signal processing steps can be required as shown by Yin et. al \cite{DVBnoise}. The images below show the ambiguity functions of two equivalent frequency band signals, DRM (low frequency digital radio broadcast) and AM radio. The DRM signal has a much wider bandwidth, and a more constant envelope, which is advantageous for passive radar systems.
 
 \begin{figure}[htbp]
@@ -142,9 +142,7 @@ The above table highlights some key differences in broadcast signals, potential 
 % \par \vspace{0.5cm} 
 % \noindent All of the above features result in DAB signals being condusive for ambiguity function performance (analyzed in further detail below). This can mainly be attributed to the relatively wide bandwidth of DAB enabling good resolution, constant DAB envelope stemming from COFDM protocol, and the multipath resistance \cite{DABambiguity}. The above being said, every reason that DAB is appropriate for passive radar also extends to other digital illuminators of opportunity, such as DVB-T, which is also a COFDM signal, and has a higher bandwidth and power than DAB.
 
-
-
-\section{Range Doppler Mapping}
+\section{Range Doppler Mapping \label{sec:rangeDoppler}}
 Range doppler mapping is a technique used to determine the distance and relative velocity of targets by analyzing the frequency shift (Doppler shift) and time delay of the received signals after they are reflected off the targets. The signal response of a target at a particular range and velocity can be predicted by the ambiguity function seen in equation \ref*{eq:ambiguity} \cite{INTRO2017}. 
 \begin{equation}
     \chi(\tau, f) = \int s_{\text{reference}}(t) s_{\text{received}}^*(t - \tau) e^{j2\pi f t} \, dt \label{eq:ambiguity}
@@ -185,11 +183,11 @@ Where:
 
 
 \par  
-\noindent In the case of this project, the time delay will be utilised to calculate the bistatic range (x axis) and the Doppler shift will be used to calculate the relative velocity of the target (y axis). In summary, ambiguity function and subequent range doppler mapping will be vital for mapping the DAB+ signal characteristics for given geometry and motion of the surveilled target. \todo{MORE DETAIL}
+\noindent In the case of this project, the time delay will be utilised to calculate the bistatic range (x axis) and the Doppler shift will be used to calculate the relative velocity of the target (y axis). In summary, ambiguity function and subequent range doppler mapping will be vital for mapping the DAB+ signal characteristics for given geometry and motion of the surveilled target.
 
 
 
-\section{Radio Hardware}
+\section{Radio Hardware \label{sec:RadioHardware}}
 Fundamentally, the relevant radio hardware for a passive radar project can be broken into the antenna and the SDR module. Given the low cost aims of this testbed, hardware cost and performance is a major consideration. 
 
 \subsection{Software Defined Radio \label{sec: SDRdongle}}

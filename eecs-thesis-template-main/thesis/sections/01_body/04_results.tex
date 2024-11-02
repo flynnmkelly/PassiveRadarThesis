@@ -4,7 +4,7 @@
 Before the testbed was used to facilitate comparison between different SDR modules detection performance, its design and components were tested according to the steps in the methodology section. Whilst this was relatively straightforward, it was necessary to ensure the project could meet its aims of a simple, user friendly, potentially scaleable design. 
 
 \subsection{SDR Module Verification \label{sec:sdrVerification}}
-The RTL-SDR and LimeSDR Mini were tested to ensure they could be used in the testbed. This comprised of testing both the software driver functionality as mentioned in Section \ref{sec:SDRmodules} and the hardware / communication functionality. 
+The RTL-SDR and LimeSDR Mini were tested to ensure they could be used in the testbed. This comprised of testing both the software driver functionality as mentioned in Section \ref{sec:SDRcomparison} and the hardware / communication functionality. 
 % RTL SDR TESTING
 \par \vspace{0.5cm}
 \noindent
@@ -159,7 +159,7 @@ Once basic arcade button functionality had been established, using the \textit{s
     ps -ef | grep python
 \end{verbatim}
 
-The python script that is run by the crontab essentially polls the latch user buttons, and then sample and compute the data appropriately. The code for the python script and the crontab entry can be viewed in the appendix \todo{Add to appendix}.
+The python script that is run by the crontab essentially polls the latch user buttons, and then sample and compute the data appropriately. The code for the python script and the crontab entry can be viewed in the appendix \ref{lst:crontab}.
 
 \subsection{Detection Edge Processing Comparison} \label{sec:edgeProcessing}
 Other than some configuration changes, the processing scripts for M1 Mac and the Rpi5 were essentially the same, revolving around range doppler processing windows of 500K samples. The figure below shows the processing time for the M1 Mac and the Rpi5, with the Rpi5 taking approximately 6 times longer to process the same amount of data.
