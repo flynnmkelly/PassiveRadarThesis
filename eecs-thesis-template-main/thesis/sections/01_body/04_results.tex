@@ -237,7 +237,7 @@ Despite being in the same location, the SNR of the LimeSDR was significantly low
     \label{fig:RDMLimeDVB}
 \end{figure}
 
-Whilst still not being able to effectively detect passing aerial targets from the same locatiion as the RTL-SDR, the generated range doppler map in Figure \ref{fig:RDMLimeDVB} shows more expected features such as clutter around the zero range as expected with autocorellation. 
+Whilst still not being able to effectively detect passing aerial targets from the same locatiion as the RTL-SDR, the generated range doppler map in Figure \ref{fig:RDMLimeDVB} shows more expected features such as clutter around the zero range as expected with autocorellation. Dissapointly, due to the high gain required for LimeSDR wideband RX signals, clipping was observed in both the DAB and DVB-T signals, which was not observed in the RTL-SDR. Resultingly, high dB correlation 'false positives' were observed in the range doppler maps, appearing as the bright horizontal bands, therby rendering target detection difficult and inconsistent.
 
 
 \section{Overall Design Cost}

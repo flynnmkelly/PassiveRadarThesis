@@ -3,8 +3,12 @@
 
 \section{Summary \label{sec:summary}}
 This thesis has explored the design and implementation of a low cost embedded passive bistatic radar detection testbed system. The testbed was built off theory and results from a range of existing studies and products aiming to provide a proof of concept for FFT based passive radar detection on low cost single board computers. The testbed was evaluated both successfully and unsuccessfully via two different SDR moules, RTL-SDR and LimeSDR, with the RTL-SDR module providing the best results. The detection processing time frames of the testbed were also compared against a high power PC. While the design of this thesis is not a complete passive radar detection system with angle of arrival and real time processing, it provides a solid foundation for future extrapolation and development. 
+
 \par \vspace{0.2cm}
 The design has also demonstrated the proliferation and feasibility of low cost embedded passive radar detection systems, with the cost totalling at approximately \$330 AUD, along with a focus of usability and simple design. This is reflective of a higher level trend of increasing compute and decreasing cost of associated technologies ranging from SBC to SDR hardware. 
+
+\par \vspace{0.2cm}
+Overall, at a high level, over six chapters, this thesis has explored the associated background material of passive radar and segued to a physical implementation via a low cost testbed. Chapter 1 provided the scope and aims for the thesis, with chapter 2 providing a theoretical brief on passive radar detection, dependencies and implementation. A literature review of existing studies and commercial products was conducted in chapter 3, before the relevant design and methodology was outlined in chapter 4. The results of verification and comparison of the testbed were presented in chapter 5, with the limitations and future work of the thesis outlined in chapter 6.
 
 \section{Limitations \label{sec: limitations}}
 Across the design and implementation of the passive bistatic radar testbed, there were some inherent and applied limitations to the design and research conducted, summarised in the following points:
@@ -16,7 +20,7 @@ Across the design and implementation of the passive bistatic radar testbed, ther
     \item The testbed configuration was limited to use based on relatively high power, wide bandwidth terrestrial digital signals such as DAB+ and DVB-T, with no testing conducted on other illuminators of opportunity, such as satellite signals or analogue signals.
 \end{itemize}
 
-These limitations come as a result on optimising the testbed design and implementation for low cost, user friendly, and scaleable passive radar detection, with the intention of providing a proof of concept for future development. Moreover, there is an abundance of literature and even commercial products that have addressed these limitations, with the intention of providing a more complete passive radar detection system.
+These limitations come as a result on optimising the testbed design and implementation for low cost, user friendly, and scaleable passive radar detection, with the intention of providing a proof of concept for future development. Moreover, there is an abundance of literature and even commercial products that have addressed these limitations, with the intention of providing a more complete passive radar detection system. However, the designed testbed has the ability to enable a range of further research that has not beeen in the scope of this project, such as low latency optimisation, multi-illuminator systems, object classification and integration to a multistatic system.
 
 
 \section{Possible Future Work \label{sec:future_work}}
